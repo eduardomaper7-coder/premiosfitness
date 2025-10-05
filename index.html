@@ -3,111 +3,108 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FitRewards | Te pagamos por entrenar</title>
+  <title>FitRewards | Tu progreso</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+    .card-bg {
+      background: linear-gradient(135deg, #3b82f6, #10b981);
+    }
+    .progress-bar {
+      transition: width 2s ease-in-out;
+    }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-[Poppins]">
 
-  <!-- Header -->
-  <header class="text-center py-10 bg-gradient-to-r from-green-400 to-blue-500 text-white">
-    <h1 class="text-2xl md:text-3xl font-bold">No faltarás nunca a tus entrenamientos</h1>
-    <p class="text-lg md:text-xl mt-2 font-semibold">La primera plataforma que te paga por entrenar</p>
-  </header>
+<body class="bg-gray-50 text-gray-800">
 
-  <!-- Estadísticas -->
-  <section class="max-w-5xl mx-auto mt-8 px-4">
-    <div class="bg-white shadow-md rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-6">
+  <!-- NAVBAR -->
+  <nav class="flex justify-between items-center px-6 py-4 bg-white shadow-md">
+    <h1 class="text-2xl font-bold text-blue-600">FitRewards</h1>
+    <div class="flex gap-6 text-gray-600">
+      <a href="#" class="hover:text-blue-600 font-medium">Monedero</a>
+      <a href="#" class="hover:text-blue-600 font-medium">Perfil</a>
+      <a href="#" class="hover:text-blue-600 font-medium">Ayuda</a>
+    </div>
+  </nav>
+
+  <!-- SECCIÓN 1: Saludo e info -->
+  <section class="max-w-5xl mx-auto mt-10 px-6">
+    <div class="bg-white rounded-2xl shadow p-6 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+      <div>
+        <h2 class="text-xl font-bold text-gray-800">Hola, Eduardo 👋</h2>
+      </div>
+      <div class="flex flex-col md:flex-row items-center gap-10 mt-4 md:mt-0">
         <div>
-          <p class="text-sm text-gray-500">Días que has ido a entrenar</p>
-          <h2 class="text-2xl font-bold">8 / 15</h2>
+          <p class="text-sm text-gray-500">Saldo total</p>
+          <h3 class="text-2xl font-bold text-green-600">10,25 €</h3>
         </div>
         <div>
-          <p class="text-sm text-gray-500">Monedero</p>
-          <h2 class="text-2xl font-bold text-green-500">24,50 €</h2>
+          <p class="text-sm text-gray-500">Apuesta en curso</p>
+          <h3 class="text-2xl font-bold text-blue-600">5 / 15 días</h3>
         </div>
       </div>
-      <div class="flex gap-3">
-        <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl shadow-md">Retirar dinero</button>
-        <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl shadow-md">Previsión</button>
-      </div>
     </div>
   </section>
 
-  <!-- Tiendas afiliadas -->
-  <section class="max-w-5xl mx-auto mt-10 px-4">
-    <h3 class="text-xl font-bold mb-4 text-gray-700">🛍️ Tiendas afiliadas</h3>
-    <div class="flex gap-4 overflow-x-auto pb-4">
-      <div class="min-w-[150px] bg-white rounded-2xl shadow p-4 flex flex-col items-center">
-        <img src="https://via.placeholder.com/80" alt="Adidas" class="mb-2 rounded-lg" />
-        <p class="font-semibold">Adidas</p>
-        <p class="text-sm text-gray-500">10% descuento</p>
+  <!-- SECCIÓN 2: Previsión + FitWallet -->
+  <section class="max-w-5xl mx-auto mt-10 px-6 grid md:grid-cols-2 gap-6">
+    
+    <!-- Nuestra Previsión -->
+    <div class="bg-white rounded-2xl shadow p-6">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">Nuestra Previsión</h3>
+      <div class="flex justify-between text-sm text-gray-500 mb-2">
+        <p>Inicio: 5 Oct 2025</p>
+        <p>Fin: 5 Nov 2025</p>
       </div>
-      <div class="min-w-[150px] bg-white rounded-2xl shadow p-4 flex flex-col items-center">
-        <img src="https://via.placeholder.com/80" alt="Redbull" class="mb-2 rounded-lg" />
-        <p class="font-semibold">Red Bull</p>
-        <p class="text-sm text-gray-500">5% cashback</p>
+
+      <!-- Barra de progreso -->
+      <div class="w-full bg-gray-200 rounded-full h-4 mb-3 relative overflow-hidden">
+        <div id="progressBar" class="bg-green-500 h-4 rounded-full progress-bar" style="width: 0%;"></div>
+        <span class="absolute right-0 top-[-24px] text-xs text-gray-600">Objetivo: 100 €</span>
       </div>
-      <div class="min-w-[150px] bg-white rounded-2xl shadow p-4 flex flex-col items-center">
-        <img src="https://via.placeholder.com/80" alt="Nike" class="mb-2 rounded-lg" />
-        <p class="font-semibold">Nike</p>
-        <p class="text-sm text-gray-500">Hasta 15%</p>
-      </div>
-      <div class="min-w-[150px] bg-white rounded-2xl shadow p-4 flex flex-col items-center">
-        <img src="https://via.placeholder.com/80" alt="Decathlon" class="mb-2 rounded-lg" />
-        <p class="font-semibold">Decathlon</p>
-        <p class="text-sm text-gray-500">Ofertas exclusivas</p>
+      <p class="text-sm text-gray-500 mt-2">
+        Progreso actual: 
+        <span id="progressText" class="font-semibold text-green-600">0 € / 100 €</span>
+      </p>
+    </div>
+
+    <!-- FitWallet -->
+    <div class="bg-white rounded-2xl shadow p-6 flex flex-col items-center justify-center">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">FitWallet</h3>
+      <div class="card-bg w-full max-w-[320px] h-[200px] rounded-2xl text-white shadow-lg flex flex-col justify-between p-6">
+        <div class="flex justify-between items-start">
+          <h4 class="text-xl font-bold tracking-wide">FitRewards</h4>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" class="h-6 opacity-90">
+        </div>
+        <div>
+          <p class="tracking-widest text-sm">**** **** **** 9241</p>
+          <div class="flex justify-between mt-2 text-xs">
+            <p>Eduardo</p>
+            <p>12/28</p>
+          </div>
+        </div>
       </div>
     </div>
+
   </section>
 
-  <!-- Retos -->
-  <section class="max-w-5xl mx-auto mt-10 px-4">
-    <h3 class="text-xl font-bold mb-4 text-gray-700">🏆 Retos activos</h3>
-    <div class="grid md:grid-cols-3 gap-4">
-      <div class="bg-white rounded-2xl shadow p-5">
-        <h4 class="font-semibold text-gray-800 mb-1">Reto Adidas</h4>
-        <p class="text-sm text-gray-500 mb-3">10.000 pasos diarios</p>
-        <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl w-full">Iniciar</button>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-5">
-        <h4 class="font-semibold text-gray-800 mb-1">Red Bull Mega Reto</h4>
-        <p class="text-sm text-gray-500 mb-3">Desafío de resistencia extrema</p>
-        <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl w-full">Soy capaz</button>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-5">
-        <h4 class="font-semibold text-gray-800 mb-1">🎟️ Sorteo FitRewards</h4>
-        <p class="text-sm text-gray-500 mb-3">Participa por solo 1 €</p>
-        <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl w-full">Participar</button>
-      </div>
-    </div>
-  </section>
+  <!-- SCRIPT para animar barra -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const progressBar = document.getElementById("progressBar");
+      const progressText = document.getElementById("progressText");
+      const currentAmount = 10.25;
+      const goal = 100;
+      const percentage = (currentAmount / goal) * 100;
 
-  <!-- Ofertas limitadas -->
-  <section class="max-w-5xl mx-auto mt-10 px-4 mb-20">
-    <h3 class="text-xl font-bold mb-4 text-gray-700">⏰ Ofertas limitadas</h3>
-    <div class="flex gap-4 overflow-x-auto pb-4">
-      <div class="min-w-[150px] bg-white rounded-2xl shadow p-4 flex flex-col items-center">
-        <img src="https://via.placeholder.com/100" alt="Batido Proteico" class="rounded-lg mb-2" />
-        <p class="font-semibold text-sm text-center">Batido Proteico - 2€</p>
-        <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 mt-2 rounded-lg text-sm">Comprar</button>
-      </div>
-      <div class="min-w-[150px] bg-white rounded-2xl shadow p-4 flex flex-col items-center">
-        <img src="https://via.placeholder.com/100" alt="Camiseta Dry-Fit" class="rounded-lg mb-2" />
-        <p class="font-semibold text-sm text-center">Camiseta Dry-Fit - 5€</p>
-        <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 mt-2 rounded-lg text-sm">Comprar</button>
-      </div>
-      <div class="min-w-[150px] bg-white rounded-2xl shadow p-4 flex flex-col items-center">
-        <img src="https://via.placeholder.com/100" alt="Energético Natural" class="rounded-lg mb-2" />
-        <p class="font-semibold text-sm text-center">Energético Natural - 3€</p>
-        <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 mt-2 rounded-lg text-sm">Comprar</button>
-      </div>
-    </div>
-  </section>
-
-  <footer class="text-center text-gray-500 text-sm py-6 bg-gray-100">
-    © 2025 FitRewards. Todos los derechos reservados.
-  </footer>
+      setTimeout(() => {
+        progressBar.style.width = percentage + "%";
+        progressText.textContent = `${currentAmount.toFixed(2)} € / ${goal} €`;
+      }, 400);
+    });
+  </script>
 
 </body>
 </html>
