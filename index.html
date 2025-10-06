@@ -29,7 +29,7 @@
     </div>
   </nav>
 
-  <!-- SECCIÓN 1: Saludo e info -->
+  <!-- SECCIÓN 1 -->
   <section class="max-w-5xl mx-auto mt-10 px-6">
     <div class="bg-white rounded-2xl shadow p-6 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
       <div>
@@ -48,18 +48,15 @@
     </div>
   </section>
 
-  <!-- SECCIÓN 2: Previsión + FitWallet -->
+  <!-- SECCIÓN 2 -->
   <section class="max-w-5xl mx-auto mt-10 px-6 grid md:grid-cols-2 gap-6">
-    
-    <!-- Nuestra Previsión -->
+    <!-- Previsión -->
     <div class="bg-white rounded-2xl shadow p-6">
       <h3 class="text-lg font-semibold mb-4 text-gray-800">Nuestra Previsión</h3>
       <div class="flex justify-between text-sm text-gray-500 mb-2">
         <p>Inicio: 5 Oct 2025</p>
         <p>Fin: 5 Nov 2025</p>
       </div>
-
-      <!-- Barra de progreso -->
       <div class="w-full bg-gray-200 rounded-full h-4 mb-3 relative overflow-hidden">
         <div id="progressBar" class="bg-green-500 h-4 rounded-full progress-bar" style="width: 0%;"></div>
         <span class="absolute right-0 top-[-24px] text-xs text-gray-600">Objetivo: 100 €</span>
@@ -92,29 +89,12 @@
     </div>
   </section>
 
-  <!-- SECCIÓN 3: Tiendas afiliadas con mapa -->
+  <!-- SECCIÓN 3 -->
   <section class="max-w-6xl mx-auto mt-16 px-6">
     <h3 class="text-2xl font-bold mb-4 text-gray-800 text-center">🛍️ Tiendas afiliadas cerca de ti</h3>
     <p class="text-center text-gray-500 mb-6">Descubre dónde puedes usar tu saldo FitRewards</p>
 
-    <!-- Mapa -->
     <div id="map" class="w-full h-[400px] rounded-2xl shadow-md border border-gray-200"></div>
-
-    <!-- Tarjetas de tiendas -->
-    <div class="grid md:grid-cols-3 gap-4 mt-8">
-      <div class="bg-white rounded-2xl shadow p-4 text-center hover:shadow-lg transition">
-        <h4 class="font-semibold text-gray-800">Gimnasio Elite</h4>
-        <p class="text-sm text-gray-500">10% de descuento</p>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-4 text-center hover:shadow-lg transition">
-        <h4 class="font-semibold text-gray-800">FitPro Nutrition</h4>
-        <p class="text-sm text-gray-500">15% en suplementos</p>
-      </div>
-      <div class="bg-white rounded-2xl shadow p-4 text-center hover:shadow-lg transition">
-        <h4 class="font-semibold text-gray-800">DecaGym</h4>
-        <p class="text-sm text-gray-500">5€ de cashback</p>
-      </div>
-    </div>
   </section>
 
   <!-- FOOTER -->
@@ -122,213 +102,121 @@
     © 2025 FitRewards. Todos los derechos reservados.
   </footer>
 
-  <!-- SCRIPTS -->
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
   <script>
-    // Animación de la barra de progreso
-    document.addEventListener("DOMContentLoaded", () => {
-      const progressBar = document.getElementById("progressBar");
-      const progressText = document.getElementById("progressText");
-      const currentAmount = 10.25;
-      const goal = 100;
-      const percentage = (currentAmount / goal) * 100;
-
-      setTimeout(() => {
-        progressBar.style.width = percentage + "%";
-        progressText.textContent = `${currentAmount.toFixed(2)} € / ${goal} €`;
-      }, 400);
-    });
-
-    // Google Maps con tiendas afiliadas
-    function initMap() {
-      const center = { lat: 40.4168, lng: -3.7038 }; // Madrid
-      const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 13,
-        center: center,
-        styles: [
-          { featureType: "poi", stylers: [{ visibility: "off" }] },
-          { featureType: "road", elementType: "labels.icon", stylers: [{ visibility: "off" }] }
-        ]
-      });
-
-      const tiendas = [
-        { name: "Gimnasio Elite", lat: 40.4168, lng: -3.7038, descuento: "10% en mensualidad" },
-        { name: "FitPro Nutrition", lat: 40.418, lng: -3.702, descuento: "15% en suplementos" },
-        { name: "DecaGym", lat: 40.415, lng: -3.705, descuento: "5€ de cashback" }
-      ];
-
-      tiendas.forEach(tienda => {
-        const marker = new google.maps.Marker({
-          position: { lat: tienda.lat, lng: tienda.lng },
-          map: map,
-          title: tienda.name
-        });
-
-        const info = new google.maps.InfoWindow({
-          content: `
-            <div style="font-family: Poppins; max-width:200px;">
-              <h4 style="font-weight:600; color:#2563eb;">${tienda.name}</h4>
-              <p style="font-size:13px; color:#555;">${tienda.descuento}</p>
-            </div>
-          `
-        });
-
-        marker.addListener("click", () => info.open(map, marker));
-      });
-    }
+    const firebaseConfig = {
+      apiKey: "AIzaSyBe1tEnFhRLcu7k_FybzcgrGVxNYNwR1vQ",
+      authDomain: "premiosfit.firebaseapp.com",
+      projectId: "premiosfit",
+      storageBucket: "premiosfit.firebasestorage.app",
+      messagingSenderId: "731339914811",
+      appId: "1:731339914811:web:1880b3fcef8661a118261e",
+      measurementId: "G-JZ0HMJNVCE"
+    };
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    const auth = firebase.auth();
   </script>
 
-  <!-- Google Maps API con tu clave -->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMKr3Suur4cyDTpJImjC25p5AlLwT1pmA&callback=initMap"></script>
-<!-- SDKs de Firebase (compatibles con HTML directo) -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <!-- Popup de autenticación moderna -->
+  <div id="authPopup" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50 p-6">
+    <h2 class="text-2xl font-bold mb-4 text-gray-800">Bienvenido a FitRewards</h2>
+    <p class="text-gray-500 mb-6 text-center">Introduce tu dirección de correo electrónico para unirte o iniciar sesión.</p>
 
-<script>
-  // Tu configuración de Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyBe1tEnFhRLcu7k_FybzcgrGVxNYNwR1vQ",
-    authDomain: "premiosfit.firebaseapp.com",
-    projectId: "premiosfit",
-    storageBucket: "premiosfit.firebasestorage.app",
-    messagingSenderId: "731339914811",
-    appId: "1:731339914811:web:1880b3fcef8661a118261e",
-    measurementId: "G-JZ0HMJNVCE"
-  };
+    <div id="stepEmail" class="flex flex-col gap-3 w-80">
+      <input type="email" id="emailInput" placeholder="Correo electrónico" class="border p-3 rounded w-full">
+      <button id="continueBtn" class="bg-black text-white p-3 rounded font-semibold">Continuar</button>
 
-  // Inicializar Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
-  const auth = firebase.auth();
+      <div class="flex items-center my-2">
+        <div class="flex-grow border-t border-gray-300"></div>
+        <span class="mx-3 text-gray-500 text-sm">o</span>
+        <div class="flex-grow border-t border-gray-300"></div>
+      </div>
 
-  console.log("✅ Firebase conectado correctamente");
-</script>
-<!-- Popup de inicio de sesión / registro -->
-<div id="authPopup" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50">
-  <h2 class="text-2xl font-bold mb-4 text-gray-800">Bienvenido a FitRewards</h2>
-  <p class="text-gray-500 mb-6">Inicia sesión o regístrate para continuar</p>
-
-  <div class="flex flex-col gap-3 w-80">
-    <input type="email" id="emailInput" placeholder="Correo electrónico" class="border p-2 rounded w-full">
-    <input type="password" id="passwordInput" placeholder="Contraseña" class="border p-2 rounded w-full">
-
-    <button id="loginBtn" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Iniciar sesión</button>
-    <button id="signupBtn" class="bg-green-600 text-white p-2 rounded hover:bg-green-700">Registrarse</button>
-    <button id="googleBtn" class="bg-red-500 text-white p-2 rounded hover:bg-red-600">Continuar con Google</button>
-  </div>
-</div>
-
-<script>
- <!-- Popup de autenticación moderna -->
-<div id="authPopup" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50 p-6">
-  <h2 class="text-2xl font-bold mb-4 text-gray-800">Bienvenido a FitRewards</h2>
-  <p class="text-gray-500 mb-6 text-center">Introduce tu dirección de correo electrónico para unirte o iniciar sesión.</p>
-
-  <div id="stepEmail" class="flex flex-col gap-3 w-80">
-    <input type="email" id="emailInput" placeholder="Correo electrónico" class="border p-3 rounded w-full">
-    <button id="continueBtn" class="bg-black text-white p-3 rounded font-semibold">Continuar</button>
-
-    <div class="flex items-center my-2">
-      <div class="flex-grow border-t border-gray-300"></div>
-      <span class="mx-3 text-gray-500 text-sm">o</span>
-      <div class="flex-grow border-t border-gray-300"></div>
+      <button id="googleBtn" class="border border-gray-400 text-gray-700 p-3 rounded font-medium hover:bg-gray-100 flex items-center justify-center gap-2">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5"> Continuar con Google
+      </button>
     </div>
 
-    <button id="googleBtn" class="border border-gray-400 text-gray-700 p-3 rounded font-medium hover:bg-gray-100 flex items-center justify-center gap-2">
-      <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5"> Continuar con Google
-    </button>
+    <div id="stepPassword" class="flex flex-col gap-3 w-80 hidden">
+      <input type="password" id="passwordInput" placeholder="Contraseña" class="border p-3 rounded w-full">
+      <input type="password" id="confirmInput" placeholder="Confirmar contraseña" class="border p-3 rounded w-full hidden">
+      <button id="loginBtn" class="bg-blue-600 text-white p-3 rounded font-semibold">Iniciar sesión</button>
+    </div>
   </div>
 
-  <div id="stepPassword" class="flex flex-col gap-3 w-80 hidden">
-    <input type="password" id="passwordInput" placeholder="Contraseña" class="border p-3 rounded w-full">
-    <input type="password" id="confirmInput" placeholder="Confirmar contraseña" class="border p-3 rounded w-full hidden">
-    <button id="loginBtn" class="bg-blue-600 text-white p-3 rounded font-semibold">Iniciar sesión</button>
-  </div>
-</div>
+  <script>
+    const popup = document.getElementById("authPopup");
+    const stepEmail = document.getElementById("stepEmail");
+    const stepPassword = document.getElementById("stepPassword");
+    const continueBtn = document.getElementById("continueBtn");
+    const googleBtn = document.getElementById("googleBtn");
+    const emailInput = document.getElementById("emailInput");
+    const passwordInput = document.getElementById("passwordInput");
+    const confirmInput = document.getElementById("confirmInput");
+    const loginBtn = document.getElementById("loginBtn");
 
-<script>
-  const auth = firebase.auth();
+    auth.onAuthStateChanged((user) => {
+      popup.style.display = user ? "none" : "flex";
+    });
 
-  const popup = document.getElementById("authPopup");
-  const stepEmail = document.getElementById("stepEmail");
-  const stepPassword = document.getElementById("stepPassword");
-  const continueBtn = document.getElementById("continueBtn");
-  const googleBtn = document.getElementById("googleBtn");
-  const emailInput = document.getElementById("emailInput");
-  const passwordInput = document.getElementById("passwordInput");
-  const confirmInput = document.getElementById("confirmInput");
-  const loginBtn = document.getElementById("loginBtn");
+    continueBtn.onclick = async () => {
+      const email = emailInput.value.trim();
+      if (!email) return alert("Por favor introduce un correo electrónico");
 
-  // Detectar usuario autenticado
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      popup.style.display = "none";
-      console.log("✅ Usuario conectado:", user.email);
-    } else {
-      popup.style.display = "flex";
-    }
-  });
+      try {
+        const methods = await auth.fetchSignInMethodsForEmail(email);
+        stepEmail.classList.add("hidden");
+        stepPassword.classList.remove("hidden");
 
-  // Paso 1: Verificar si el email existe
-  continueBtn.onclick = async () => {
-    const email = emailInput.value.trim();
-    if (!email) return alert("Por favor introduce un correo electrónico");
-
-    try {
-      // Verificar si el correo ya está registrado
-      await auth.fetchSignInMethodsForEmail(email);
-      const methods = await auth.fetchSignInMethodsForEmail(email);
-
-      stepEmail.classList.add("hidden");
-      stepPassword.classList.remove("hidden");
-
-      if (methods.length > 0) {
-        // Usuario existente
-        confirmInput.classList.add("hidden");
-        loginBtn.textContent = "Iniciar sesión";
-        loginBtn.onclick = async () => {
-          const password = passwordInput.value;
-          try {
-            await auth.signInWithEmailAndPassword(email, password);
-            popup.style.display = "none";
-          } catch (error) {
-            alert("Error: " + error.message);
-          }
-        };
-      } else {
-        // Usuario nuevo
-        confirmInput.classList.remove("hidden");
-        loginBtn.textContent = "Registrarse";
-        loginBtn.onclick = async () => {
-          const password = passwordInput.value;
-          const confirm = confirmInput.value;
-          if (password !== confirm) return alert("Las contraseñas no coinciden");
-          try {
-            await auth.createUserWithEmailAndPassword(email, password);
-            popup.style.display = "none";
-          } catch (error) {
-            alert("Error: " + error.message);
-          }
-        };
+        if (methods.length > 0) {
+          confirmInput.classList.add("hidden");
+          loginBtn.textContent = "Iniciar sesión";
+          loginBtn.onclick = async () => {
+            try {
+              await auth.signInWithEmailAndPassword(email, passwordInput.value);
+              popup.style.display = "none";
+            } catch (error) {
+              alert(error.message);
+            }
+          };
+        } else {
+          confirmInput.classList.remove("hidden");
+          loginBtn.textContent = "Registrarse";
+          loginBtn.onclick = async () => {
+            if (passwordInput.value !== confirmInput.value)
+              return alert("Las contraseñas no coinciden");
+            try {
+              await auth.createUserWithEmailAndPassword(email, passwordInput.value);
+              popup.style.display = "none";
+            } catch (error) {
+              alert(error.message);
+            }
+          };
+        }
+      } catch (err) {
+        alert("Error al verificar el correo: " + err.message);
       }
-    } catch (err) {
-      alert("Error al verificar el correo: " + err.message);
-    }
-  };
+    };
 
-  // Iniciar sesión con Google
-  googleBtn.onclick = async () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    try {
-      await auth.signInWithPopup(provider);
-      popup.style.display = "none";
-    } catch (error) {
-      alert("Error al iniciar con Google: " + error.message);
-    }
-  };
-</script>
+    googleBtn.onclick = async () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try {
+        await auth.signInWithPopup(provider);
+        popup.style.display = "none";
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+  </script>
 
-
+  <!-- Google Maps -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMKr3Suur4cyDTpJImjC25p5AlLwT1pmA&callback=initMap"></script>
 </body>
 </html>
+
 
