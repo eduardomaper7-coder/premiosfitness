@@ -179,6 +179,30 @@
 
   <!-- Google Maps API con tu clave -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMKr3Suur4cyDTpJImjC25p5AlLwT1pmA&callback=initMap"></script>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js"></script>
+
+<script>
+  // Tu configuración de Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyBe1tEnFhRLcu7k_FybzcgrGVxNYNwR1vQ",
+    authDomain: "premiosfit.firebaseapp.com",
+    projectId: "premiosfit",
+    storageBucket: "premiosfit.firebasestorage.app",
+    messagingSenderId: "731339914811",
+    appId: "1:731339914811:web:1880b3fcef8661a118261e",
+    measurementId: "G-JZ0HMJNVCE"
+  };
+
+  // Inicializar Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const analytics = firebase.analytics();
+  const auth = firebase.auth();
+
+  console.log("✅ Firebase conectado correctamente");
+</script>
 
 </body>
 </html>
