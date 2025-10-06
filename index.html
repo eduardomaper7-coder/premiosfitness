@@ -179,10 +179,10 @@
 
   <!-- Google Maps API con tu clave -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMKr3Suur4cyDTpJImjC25p5AlLwT1pmA&callback=initMap"></script>
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js"></script>
+<!-- SDKs de Firebase (compatibles con HTML directo) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 
 <script>
   // Tu configuración de Firebase
@@ -197,8 +197,8 @@
   };
 
   // Inicializar Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const analytics = firebase.analytics();
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
   const auth = firebase.auth();
 
   console.log("✅ Firebase conectado correctamente");
