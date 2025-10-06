@@ -219,48 +219,100 @@
 </div>
 
 <script>
-  // Elementos del popup
-  const authPopup = document.getElementById('authPopup');
-  const emailInput = document.getElementById('emailInput');
-  const passwordInput = document.getElementById('passwordInput');
-  const loginBtn = document.getElementById('loginBtn');
-  const signupBtn = document.getElementById('signupBtn');
-  const googleBtn = document.getElementById('googleBtn');
+ <!-- Popup de autenticación moderna -->
+<div id="authPopup" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50 p-6">
+  <h2 class="text-2xl font-bold mb-4 text-gray-800">Bienvenido a FitRewards</h2>
+  <p class="text-gray-500 mb-6 text-center">Introduce tu dirección de correo electrónico para unirte o iniciar sesión.</p>
 
-  // Detectar si el usuario ya está logueado
-  firebase.auth().onAuthStateChanged((user) => {
+  <div id="stepEmail" class="flex flex-col gap-3 w-80">
+    <input type="email" id="emailInput" placeholder="Correo electrónico" class="border p-3 rounded w-full">
+    <button id="continueBtn" class="bg-black text-white p-3 rounded font-semibold">Continuar</button>
+
+    <div class="flex items-center my-2">
+      <div class="flex-grow border-t border-gray-300"></div>
+      <span class="mx-3 text-gray-500 text-sm">o</span>
+      <div class="flex-grow border-t border-gray-300"></div>
+    </div>
+
+    <button id="googleBtn" class="border border-gray-400 text-gray-700 p-3 rounded font-medium hover:bg-gray-100 flex items-center justify-center gap-2">
+      <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5"> Continuar con Google
+    </button>
+  </div>
+
+  <div id="stepPassword" class="flex flex-col gap-3 w-80 hidden">
+    <input type="password" id="passwordInput" placeholder="Contraseña" class="border p-3 rounded w-full">
+    <input type="password" id="confirmInput" placeholder="Confirmar contraseña" class="border p-3 rounded w-full hidden">
+    <button id="loginBtn" class="bg-blue-600 text-white p-3 rounded font-semibold">Iniciar sesión</button>
+  </div>
+</div>
+
+<script>
+  const auth = firebase.auth();
+
+  const popup = document.getElementById("authPopup");
+  const stepEmail = document.getElementById("stepEmail");
+  const stepPassword = document.getElementById("stepPassword");
+  const continueBtn = document.getElementById("continueBtn");
+  const googleBtn = document.getElementById("googleBtn");
+  const emailInput = document.getElementById("emailInput");
+  const passwordInput = document.getElementById("passwordInput");
+  const confirmInput = document.getElementById("confirmInput");
+  const loginBtn = document.getElementById("loginBtn");
+
+  // Detectar usuario autenticado
+  auth.onAuthStateChanged((user) => {
     if (user) {
-      console.log("Usuario conectado:", user.email);
-      authPopup.style.display = 'none'; // Oculta el popup
+      popup.style.display = "none";
+      console.log("✅ Usuario conectado:", user.email);
     } else {
-      console.log("Usuario no autenticado");
-      authPopup.style.display = 'flex'; // Muestra el popup
+      popup.style.display = "flex";
     }
   });
 
-  // Iniciar sesión con email
-  loginBtn.onclick = async () => {
-    const email = emailInput.value;
-    const password = passwordInput.value;
-    try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
-      authPopup.style.display = 'none';
-      console.log("✅ Sesión iniciada correctamente");
-    } catch (error) {
-      alert("Error al iniciar sesión: " + error.message);
-    }
-  };
+  // Paso 1: Verificar si el email existe
+  continueBtn.onclick = async () => {
+    const email = emailInput.value.trim();
+    if (!email) return alert("Por favor introduce un correo electrónico");
 
-  // Registrarse con email
-  signupBtn.onclick = async () => {
-    const email = emailInput.value;
-    const password = passwordInput.value;
     try {
-      await firebase.auth().createUserWithEmailAndPassword(email, password);
-      authPopup.style.display = 'none';
-      console.log("✅ Registro completado correctamente");
-    } catch (error) {
-      alert("Error al registrarse: " + error.message);
+      // Verificar si el correo ya está registrado
+      await auth.fetchSignInMethodsForEmail(email);
+      const methods = await auth.fetchSignInMethodsForEmail(email);
+
+      stepEmail.classList.add("hidden");
+      stepPassword.classList.remove("hidden");
+
+      if (methods.length > 0) {
+        // Usuario existente
+        confirmInput.classList.add("hidden");
+        loginBtn.textContent = "Iniciar sesión";
+        loginBtn.onclick = async () => {
+          const password = passwordInput.value;
+          try {
+            await auth.signInWithEmailAndPassword(email, password);
+            popup.style.display = "none";
+          } catch (error) {
+            alert("Error: " + error.message);
+          }
+        };
+      } else {
+        // Usuario nuevo
+        confirmInput.classList.remove("hidden");
+        loginBtn.textContent = "Registrarse";
+        loginBtn.onclick = async () => {
+          const password = passwordInput.value;
+          const confirm = confirmInput.value;
+          if (password !== confirm) return alert("Las contraseñas no coinciden");
+          try {
+            await auth.createUserWithEmailAndPassword(email, password);
+            popup.style.display = "none";
+          } catch (error) {
+            alert("Error: " + error.message);
+          }
+        };
+      }
+    } catch (err) {
+      alert("Error al verificar el correo: " + err.message);
     }
   };
 
@@ -268,14 +320,14 @@
   googleBtn.onclick = async () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     try {
-      await firebase.auth().signInWithPopup(provider);
-      authPopup.style.display = 'none';
-      console.log("✅ Sesión con Google iniciada correctamente");
+      await auth.signInWithPopup(provider);
+      popup.style.display = "none";
     } catch (error) {
       alert("Error al iniciar con Google: " + error.message);
     }
   };
 </script>
+
 
 </body>
 </html>
