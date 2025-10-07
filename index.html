@@ -157,115 +157,145 @@
     </div>
   </div>
 
-  <!-- Script de autenticación -->
-  <script>
-    const popup = document.getElementById("authPopup");
-    const stepEmail = document.getElementById("stepEmail");
-    const stepPassword = document.getElementById("stepPassword");
-    const continueBtn = document.getElementById("continueBtn");
-    const googleBtn = document.getElementById("googleBtn");
-    const emailInput = document.getElementById("emailInput");
-    const emailDisplay = document.getElementById("emailDisplay");
-    const editEmailBtn = document.getElementById("editEmailBtn");
-    const passwordInput = document.getElementById("passwordInput");
-    const confirmInput = document.getElementById("confirmInput");
-    const loginBtn = document.getElementById("loginBtn");
+<!-- Script de autenticación -->
+<script>
+  const popup = document.getElementById("authPopup");
+  const stepEmail = document.getElementById("stepEmail");
+  const stepPassword = document.getElementById("stepPassword");
+  const continueBtn = document.getElementById("continueBtn");
+  const googleBtn = document.getElementById("googleBtn");
+  const emailInput = document.getElementById("emailInput");
+  const emailDisplay = document.getElementById("emailDisplay");
+  const editEmailBtn = document.getElementById("editEmailBtn");
+  const passwordInput = document.getElementById("passwordInput");
+  const confirmInput = document.getElementById("confirmInput");
+  const loginBtn = document.getElementById("loginBtn");
 
-    auth.onAuthStateChanged((user) => {
-      popup.style.display = user ? "none" : "flex";
-    });
+  // 🔹 Oculta el popup si el usuario ya está logueado
+  auth.onAuthStateChanged((user) => {
+    popup.style.display = user ? "none" : "flex";
+    if (user) {
+      console.log("✅ Sesión iniciada:", user.email);
+    }
+  });
 
-    editEmailBtn.onclick = () => {
-      stepPassword.classList.add("hidden");
-      stepEmail.classList.remove("hidden");
-      emailInput.focus();
-    };
+  editEmailBtn.onclick = () => {
+    stepPassword.classList.add("hidden");
+    stepEmail.classList.remove("hidden");
+    emailInput.focus();
+  };
 
-    continueBtn.onclick = async () => {
-      const email = emailInput.value.trim();
-      if (!email) return alert("Por favor introduce un correo electrónico válido");
+  continueBtn.onclick = async () => {
+    const email = emailInput.value.trim();
+    if (!email) return alert("Por favor introduce un correo electrónico válido");
 
-      try {
-        const methods = await auth.fetchSignInMethodsForEmail(email);
-        console.log("Métodos detectados para", email, "→", methods);
+    try {
+      const methods = await auth.fetchSignInMethodsForEmail(email);
+      emailDisplay.value = email;
+      stepEmail.classList.add("hidden");
+      stepPassword.classList.remove("hidden");
 
-        emailDisplay.value = email;
-        stepEmail.classList.add("hidden");
-        stepPassword.classList.remove("hidden");
-
-        if (methods.includes("google.com")) return mostrarGoogleLogin();
-        if (methods.includes("password")) return mostrarLoginConContraseña(email);
-        if (methods.length === 0 && email.endsWith("@gmail.com")) return mostrarGoogleLogin(true);
-
-        mostrarRegistro(email);
-      } catch (error) {
-        alert("Error al verificar el correo: " + error.message);
+      // 🔸 Si ya tiene cuenta con Google
+      if (methods.includes("google.com")) {
+        mostrarGoogleLogin();
+        return;
       }
-    };
 
-    googleBtn.onclick = async () => {
+      // 🔸 Si ya tiene cuenta con contraseña
+      if (methods.includes("password")) {
+        mostrarLoginConContraseña(email);
+        return;
+      }
+
+      // 🔸 Si no existe, registro nuevo
+      mostrarRegistro(email);
+    } catch (error) {
+      console.error(error);
+      alert("Error al verificar el correo: " + error.message);
+    }
+  };
+
+  googleBtn.onclick = async () => {
+    try {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      await auth.signInWithPopup(provider);
+      popup.style.display = "none";
+    } catch (error) {
+      console.error(error);
+      alert("Error al iniciar sesión con Google: " + error.message);
+    }
+  };
+
+  function mostrarGoogleLogin() {
+    confirmInput.classList.add("hidden");
+    passwordInput.classList.add("hidden");
+    loginBtn.textContent = "Continuar con Google";
+
+    loginBtn.onclick = async () => {
       try {
         const provider = new firebase.auth.GoogleAuthProvider();
         await auth.signInWithPopup(provider);
         popup.style.display = "none";
       } catch (error) {
+        console.error(error);
         alert("Error al iniciar sesión con Google: " + error.message);
       }
     };
+  }
 
-    function mostrarGoogleLogin(fromGmail = false) {
-      confirmInput.classList.add("hidden");
-      passwordInput.classList.add("hidden");
-      loginBtn.textContent = fromGmail ? "Iniciar sesión con Google (Gmail detectado)" : "Iniciar sesión con Google";
+  function mostrarLoginConContraseña(email) {
+    confirmInput.classList.add("hidden");
+    passwordInput.classList.remove("hidden");
+    loginBtn.textContent = "Iniciar sesión";
 
-      loginBtn.onclick = async () => {
-        try {
-          const provider = new firebase.auth.GoogleAuthProvider();
-          await auth.signInWithPopup(provider);
-          popup.style.display = "none";
-        } catch (error) {
-          alert("Error al iniciar con Google: " + error.message);
-        }
-      };
-    }
+    loginBtn.onclick = async () => {
+      const password = passwordInput.value.trim();
+      if (!password) return alert("Introduce tu contraseña");
 
-    function mostrarLoginConContraseña(email) {
-      confirmInput.classList.add("hidden");
-      passwordInput.classList.remove("hidden");
-      loginBtn.textContent = "Iniciar sesión";
-
-      loginBtn.onclick = async () => {
-        const password = passwordInput.value.trim();
-        if (!password) return alert("Introduce tu contraseña");
-        try {
-          await auth.signInWithEmailAndPassword(email, password);
-          popup.style.display = "none";
-        } catch (error) {
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        popup.style.display = "none";
+      } catch (error) {
+        console.error(error);
+        if (error.code === "auth/wrong-password") {
+          alert("Contraseña incorrecta.");
+        } else if (error.code === "auth/user-not-found") {
+          alert("Usuario no encontrado.");
+        } else {
           alert("Error al iniciar sesión: " + error.message);
         }
-      };
-    }
+      }
+    };
+  }
 
-    function mostrarRegistro(email) {
-      confirmInput.classList.remove("hidden");
-      passwordInput.classList.remove("hidden");
-      loginBtn.textContent = "Registrarse";
+  function mostrarRegistro(email) {
+    confirmInput.classList.remove("hidden");
+    passwordInput.classList.remove("hidden");
+    loginBtn.textContent = "Registrarse";
 
-      loginBtn.onclick = async () => {
-        const password = passwordInput.value.trim();
-        const confirm = confirmInput.value.trim();
-        if (!password || !confirm) return alert("Completa ambos campos");
-        if (password !== confirm) return alert("Las contraseñas no coinciden");
+    loginBtn.onclick = async () => {
+      const password = passwordInput.value.trim();
+      const confirm = confirmInput.value.trim();
+      if (!password || !confirm) return alert("Completa ambos campos");
+      if (password !== confirm) return alert("Las contraseñas no coinciden");
 
-        try {
-          await auth.createUserWithEmailAndPassword(email, password);
-          popup.style.display = "none";
-        } catch (error) {
+      try {
+        await auth.createUserWithEmailAndPassword(email, password);
+        popup.style.display = "none";
+      } catch (error) {
+        console.error(error);
+        if (error.code === "auth/weak-password") {
+          alert("La contraseña debe tener al menos 6 caracteres.");
+        } else if (error.code === "auth/email-already-in-use") {
+          alert("Ya existe una cuenta con este correo.");
+        } else {
           alert("Error al registrarse: " + error.message);
         }
-      };
-    }
-  </script>
+      }
+    };
+  }
+</script>
+
 
   <!-- Google Maps -->
   <script>
