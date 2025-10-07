@@ -118,131 +118,97 @@
   </script>
 
 <!-- Popup de autenticación -->
-<div id="authPopup" class="fixed inset-0 bg-white flex flex-col items-center justify-center z-50 p-6">
-  <h2 class="text-2xl font-bold mb-4 text-gray-800">Bienvenido a FitRewards</h2>
-  <p class="text-gray-500 mb-6 text-center">Inicia sesión o crea una cuenta para continuar.</p>
+<div id="authPopup" class="fixed inset-0 bg-white/90 backdrop-blur-md flex flex-col items-center justify-center z-50 p-6">
+  <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-8 text-center">
+    <h2 class="text-2xl font-bold mb-2 text-gray-800">Bienvenido a FitRewards</h2>
+    <p class="text-gray-500 mb-6 text-sm">Accede o crea una cuenta con tu correo electrónico</p>
 
-  <!-- Selección de acción -->
-  <div id="stepChoice" class="flex flex-col gap-3 w-80">
-    <button id="loginChoiceBtn" class="bg-blue-600 text-white p-3 rounded font-semibold">Iniciar sesión</button>
-    <button id="registerChoiceBtn" class="bg-green-600 text-white p-3 rounded font-semibold">Registrarse</button>
+    <!-- Paso 1: correo -->
+    <div id="stepEmail" class="flex flex-col gap-3">
+      <input type="email" id="emailInput" placeholder="Correo electrónico" class="border p-3 rounded w-full text-center">
+      <button id="continueBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">Continuar</button>
 
-    <div class="flex items-center my-2">
-      <div class="flex-grow border-t border-gray-300"></div>
-      <span class="mx-3 text-gray-500 text-sm">o</span>
-      <div class="flex-grow border-t border-gray-300"></div>
+      <div class="flex items-center my-3">
+        <div class="flex-grow border-t border-gray-300"></div>
+        <span class="mx-3 text-gray-400 text-sm">o</span>
+        <div class="flex-grow border-t border-gray-300"></div>
+      </div>
+
+      <button id="googleBtn" class="border border-gray-400 text-gray-700 p-3 rounded font-medium hover:bg-gray-100 flex items-center justify-center gap-2">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5"> Continuar con Google
+      </button>
     </div>
 
-    <button id="googleBtn" class="border border-gray-400 text-gray-700 p-3 rounded font-medium hover:bg-gray-100 flex items-center justify-center gap-2">
-      <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5"> Continuar con Google
-    </button>
-  </div>
-
-  <!-- Paso de inicio de sesión -->
-  <div id="stepLogin" class="flex flex-col gap-3 w-80 hidden">
-    <button id="backToChoice1" class="text-blue-500 text-sm text-left">← Volver</button>
-    <input type="email" id="loginEmail" placeholder="Correo electrónico" class="border p-3 rounded w-full">
-    <input type="password" id="loginPassword" placeholder="Contraseña" class="border p-3 rounded w-full">
-    <button id="loginBtn" class="bg-blue-600 text-white p-3 rounded font-semibold">Iniciar sesión</button>
-  </div>
-
-  <!-- Paso de registro -->
-  <div id="stepRegister" class="flex flex-col gap-3 w-80 hidden">
-    <button id="backToChoice2" class="text-blue-500 text-sm text-left">← Volver</button>
-    <input type="email" id="registerEmail" placeholder="Correo electrónico" class="border p-3 rounded w-full">
-    <input type="password" id="registerPassword" placeholder="Contraseña" class="border p-3 rounded w-full">
-    <input type="password" id="registerConfirm" placeholder="Confirmar contraseña" class="border p-3 rounded w-full">
-    <button id="registerBtn" class="bg-green-600 text-white p-3 rounded font-semibold">Registrarse</button>
+    <!-- Paso 2: contraseña -->
+    <div id="stepPassword" class="flex flex-col gap-3 hidden">
+      <button id="backBtn" class="text-blue-500 text-sm text-left">← Cambiar correo</button>
+      <input type="password" id="passwordInput" placeholder="Contraseña" class="border p-3 rounded w-full">
+      <input type="password" id="confirmInput" placeholder="Confirmar contraseña" class="border p-3 rounded w-full hidden">
+      <button id="actionBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">Continuar</button>
+    </div>
   </div>
 </div>
 
 <!-- Script de autenticación -->
 <script>
   const popup = document.getElementById("authPopup");
-  const stepChoice = document.getElementById("stepChoice");
-  const stepLogin = document.getElementById("stepLogin");
-  const stepRegister = document.getElementById("stepRegister");
+  const stepEmail = document.getElementById("stepEmail");
+  const stepPassword = document.getElementById("stepPassword");
+  const continueBtn = document.getElementById("continueBtn");
   const googleBtn = document.getElementById("googleBtn");
+  const emailInput = document.getElementById("emailInput");
+  const backBtn = document.getElementById("backBtn");
+  const passwordInput = document.getElementById("passwordInput");
+  const confirmInput = document.getElementById("confirmInput");
+  const actionBtn = document.getElementById("actionBtn");
 
-  const loginChoiceBtn = document.getElementById("loginChoiceBtn");
-  const registerChoiceBtn = document.getElementById("registerChoiceBtn");
-  const backToChoice1 = document.getElementById("backToChoice1");
-  const backToChoice2 = document.getElementById("backToChoice2");
+  let currentEmail = "";
+  let isNewUser = false;
 
-  const loginEmail = document.getElementById("loginEmail");
-  const loginPassword = document.getElementById("loginPassword");
-  const loginBtn = document.getElementById("loginBtn");
-
-  const registerEmail = document.getElementById("registerEmail");
-  const registerPassword = document.getElementById("registerPassword");
-  const registerConfirm = document.getElementById("registerConfirm");
-  const registerBtn = document.getElementById("registerBtn");
-
-  // Mostrar/ocultar popup según sesión
   auth.onAuthStateChanged((user) => {
     popup.style.display = user ? "none" : "flex";
   });
 
-  // Navegación entre pasos
-  loginChoiceBtn.onclick = () => {
-    stepChoice.classList.add("hidden");
-    stepLogin.classList.remove("hidden");
-  };
-  registerChoiceBtn.onclick = () => {
-    stepChoice.classList.add("hidden");
-    stepRegister.classList.remove("hidden");
-  };
-  backToChoice1.onclick = backToChoice2.onclick = () => {
-    stepLogin.classList.add("hidden");
-    stepRegister.classList.add("hidden");
-    stepChoice.classList.remove("hidden");
+  backBtn.onclick = () => {
+    stepPassword.classList.add("hidden");
+    stepEmail.classList.remove("hidden");
+    emailInput.focus();
   };
 
-  // LOGIN EMAIL/PASS
-  loginBtn.onclick = async () => {
-    const email = loginEmail.value.trim();
-    const password = loginPassword.value.trim();
-    if (!email || !password) return alert("Por favor, completa ambos campos.");
+  continueBtn.onclick = async () => {
+    const email = emailInput.value.trim();
+    if (!email) return alert("Por favor, introduce tu correo electrónico.");
 
     try {
-      await auth.signInWithEmailAndPassword(email, password);
-      popup.style.display = "none";
+      const methods = await auth.fetchSignInMethodsForEmail(email);
+      currentEmail = email;
+
+      // Si tiene cuenta con Google → sugerir continuar con Google
+      if (methods.includes("google.com")) {
+        const confirmGoogle = confirm("Este correo está registrado con Google. ¿Quieres continuar con Google?");
+        if (confirmGoogle) {
+          const provider = new firebase.auth.GoogleAuthProvider();
+          await auth.signInWithPopup(provider);
+          popup.style.display = "none";
+        }
+        return;
+      }
+
+      // Si tiene cuenta con contraseña → login
+      if (methods.includes("password")) {
+        isNewUser = false;
+        mostrarPasswordStep("Iniciar sesión");
+      } else {
+        // Si no existe → registro
+        isNewUser = true;
+        mostrarPasswordStep("Registrarse");
+      }
     } catch (error) {
       console.error(error);
-      if (error.code === "auth/user-not-found") {
-        alert("No existe una cuenta con este correo.");
-      } else if (error.code === "auth/wrong-password") {
-        alert("Contraseña incorrecta.");
-      } else {
-        alert("Error al iniciar sesión: " + error.message);
-      }
+      alert("Error al verificar el correo: " + error.message);
     }
   };
 
-  // REGISTRO EMAIL/PASS
-  registerBtn.onclick = async () => {
-    const email = registerEmail.value.trim();
-    const pass = registerPassword.value.trim();
-    const conf = registerConfirm.value.trim();
-    if (!email || !pass || !conf) return alert("Por favor, completa todos los campos.");
-    if (pass !== conf) return alert("Las contraseñas no coinciden.");
-
-    try {
-      await auth.createUserWithEmailAndPassword(email, pass);
-      popup.style.display = "none";
-    } catch (error) {
-      console.error(error);
-      if (error.code === "auth/email-already-in-use") {
-        alert("Ya existe una cuenta con este correo.");
-      } else if (error.code === "auth/weak-password") {
-        alert("La contraseña debe tener al menos 6 caracteres.");
-      } else {
-        alert("Error al registrarse: " + error.message);
-      }
-    }
-  };
-
-  // GOOGLE SIGN-IN
   googleBtn.onclick = async () => {
     try {
       const provider = new firebase.auth.GoogleAuthProvider();
@@ -253,6 +219,47 @@
       alert("Error al iniciar sesión con Google: " + error.message);
     }
   };
+
+  function mostrarPasswordStep(tipo) {
+    stepEmail.classList.add("hidden");
+    stepPassword.classList.remove("hidden");
+    actionBtn.textContent = tipo;
+
+    if (tipo === "Registrarse") {
+      confirmInput.classList.remove("hidden");
+    } else {
+      confirmInput.classList.add("hidden");
+    }
+
+    passwordInput.focus();
+
+    actionBtn.onclick = async () => {
+      const pass = passwordInput.value.trim();
+      const conf = confirmInput.value.trim();
+      if (!pass) return alert("Introduce tu contraseña.");
+
+      try {
+        if (isNewUser) {
+          if (pass !== conf) return alert("Las contraseñas no coinciden.");
+          await auth.createUserWithEmailAndPassword(currentEmail, pass);
+        } else {
+          await auth.signInWithEmailAndPassword(currentEmail, pass);
+        }
+        popup.style.display = "none";
+      } catch (error) {
+        console.error(error);
+        if (error.code === "auth/wrong-password") {
+          alert("Contraseña incorrecta.");
+        } else if (error.code === "auth/email-already-in-use") {
+          alert("Ya existe una cuenta con este correo.");
+        } else if (error.code === "auth/weak-password") {
+          alert("La contraseña debe tener al menos 6 caracteres.");
+        } else {
+          alert("Error: " + error.message);
+        }
+      }
+    };
+  }
 </script>
 
 
