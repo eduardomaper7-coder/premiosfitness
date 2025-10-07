@@ -117,260 +117,132 @@
     const auth = firebase.auth();
   </script>
 
-<!-- Popup de autenticación (flujo robusto) -->
+<!-- POPUP DE AUTENTICACIÓN SIMPLE -->
 <div id="authPopup" class="fixed inset-0 bg-white/90 backdrop-blur-md flex items-center justify-center z-50 p-6">
-  <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-8">
-    <h2 class="text-2xl font-bold mb-2 text-gray-800 text-center">Bienvenido a FitRewards</h2>
-    <p class="text-gray-500 mb-6 text-sm text-center">Accede o crea una cuenta con tu correo</p>
+  <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-8 text-center">
+    <h2 class="text-2xl font-bold mb-2 text-gray-800">Bienvenido a FitRewards</h2>
+    <p class="text-gray-500 mb-6 text-sm">Inicia sesión o crea una cuenta para continuar</p>
 
-    <!-- Paso 1: correo -->
-    <div id="stepEmail" class="flex flex-col gap-3">
-      <input type="email" id="emailInput" placeholder="Correo electrónico" class="border p-3 rounded w-full text-center">
-      <button id="continueBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">
-        Continuar
+    <!-- Menú principal -->
+    <div id="menuStep" class="flex flex-col gap-3">
+      <button id="loginChoiceBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">
+        Iniciar sesión
       </button>
-
-      <div class="flex items-center my-3">
-        <div class="flex-grow border-t border-gray-300"></div>
-        <span class="mx-3 text-gray-400 text-sm">o</span>
-        <div class="flex-grow border-t border-gray-300"></div>
-      </div>
-
-      <button id="googleBtnEmailStep" class="border border-gray-400 text-gray-700 p-3 rounded font-medium hover:bg-gray-100 flex items-center justify-center gap-2">
-        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-5 h-5">
-        Continuar con Google
+      <button id="registerChoiceBtn" class="bg-green-600 text-white p-3 rounded font-semibold hover:bg-green-700 transition">
+        Registrarse
       </button>
     </div>
 
-    <!-- Paso 2: contraseña / registro -->
-    <div id="stepPassword" class="flex flex-col gap-3 hidden">
-      <button id="backBtn" class="text-blue-500 text-sm text-left">← Cambiar correo</button>
+    <!-- Paso de inicio de sesión -->
+    <div id="loginStep" class="flex flex-col gap-3 hidden">
+      <button id="backToMenu1" class="text-blue-500 text-sm text-left">← Volver</button>
+      <input type="email" id="loginEmail" placeholder="Correo electrónico" class="border p-3 rounded w-full">
+      <input type="password" id="loginPassword" placeholder="Contraseña" class="border p-3 rounded w-full">
+      <button id="loginBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">
+        Iniciar sesión
+      </button>
+    </div>
 
-      <!-- Aviso de Google cuando detectamos que la cuenta es solo Google -->
-      <div id="googleHint" class="hidden bg-yellow-50 border border-yellow-200 text-yellow-800 text-sm rounded p-3">
-        Este correo está asociado a una cuenta de Google.
-        <button id="googleBtnHint" class="mt-2 w-full border border-gray-400 text-gray-700 p-2 rounded hover:bg-gray-100 flex items-center justify-center gap-2">
-          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="w-4 h-4"> Continuar con Google
-        </button>
-      </div>
-
-      <input type="password" id="passwordInput" placeholder="Contraseña" class="border p-3 rounded w-full">
-      <input type="password" id="confirmInput" placeholder="Confirmar contraseña" class="border p-3 rounded w-full hidden">
-
-      <div class="flex items-center justify-between">
-        <button id="forgotBtn" class="text-sm text-blue-600 hover:underline hidden">¿Olvidaste tu contraseña?</button>
-        <span id="modeBadge" class="text-xs px-2 py-1 rounded bg-gray-100 text-gray-600"></span>
-      </div>
-
-      <button id="actionBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">
-        Continuar
+    <!-- Paso de registro -->
+    <div id="registerStep" class="flex flex-col gap-3 hidden">
+      <button id="backToMenu2" class="text-blue-500 text-sm text-left">← Volver</button>
+      <input type="email" id="registerEmail" placeholder="Correo electrónico" class="border p-3 rounded w-full">
+      <input type="password" id="registerPassword" placeholder="Contraseña" class="border p-3 rounded w-full">
+      <input type="password" id="registerConfirm" placeholder="Confirmar contraseña" class="border p-3 rounded w-full">
+      <button id="registerBtn" class="bg-green-600 text-white p-3 rounded font-semibold hover:bg-green-700 transition">
+        Registrarse
       </button>
     </div>
   </div>
 </div>
 
+<!-- SCRIPT DE AUTENTICACIÓN -->
 <script>
-  // Elementos
   const popup = document.getElementById("authPopup");
-  const stepEmail = document.getElementById("stepEmail");
-  const stepPassword = document.getElementById("stepPassword");
-  const continueBtn = document.getElementById("continueBtn");
-  const emailInput = document.getElementById("emailInput");
-  const googleBtnEmailStep = document.getElementById("googleBtnEmailStep");
+  const menuStep = document.getElementById("menuStep");
+  const loginStep = document.getElementById("loginStep");
+  const registerStep = document.getElementById("registerStep");
 
-  const backBtn = document.getElementById("backBtn");
-  const googleHint = document.getElementById("googleHint");
-  const googleBtnHint = document.getElementById("googleBtnHint");
-  const passwordInput = document.getElementById("passwordInput");
-  const confirmInput = document.getElementById("confirmInput");
-  const actionBtn = document.getElementById("actionBtn");
-  const forgotBtn = document.getElementById("forgotBtn");
-  const modeBadge = document.getElementById("modeBadge");
+  const loginChoiceBtn = document.getElementById("loginChoiceBtn");
+  const registerChoiceBtn = document.getElementById("registerChoiceBtn");
+  const backToMenu1 = document.getElementById("backToMenu1");
+  const backToMenu2 = document.getElementById("backToMenu2");
 
-  // Estado
-  let currentEmail = "";
-  let detectedMethods = [];
-  // isNewUser: true = registro, false = login, null = desconocido/forzar Google
-  let isNewUser = null;
+  const loginEmail = document.getElementById("loginEmail");
+  const loginPassword = document.getElementById("loginPassword");
+  const loginBtn = document.getElementById("loginBtn");
+
+  const registerEmail = document.getElementById("registerEmail");
+  const registerPassword = document.getElementById("registerPassword");
+  const registerConfirm = document.getElementById("registerConfirm");
+  const registerBtn = document.getElementById("registerBtn");
 
   // Mostrar/ocultar popup según sesión
   auth.onAuthStateChanged((user) => {
     popup.style.display = user ? "none" : "flex";
   });
 
-  // Ir a paso contraseña SIEMPRE; detección en paralelo
-  continueBtn.onclick = async () => {
-    const email = emailInput.value.trim().toLowerCase();
-    if (!email) return alert("Por favor, introduce tu correo electrónico.");
-    currentEmail = email;
-
-    // UI: ir al paso de contraseña ya
-    stepEmail.classList.add("hidden");
-    stepPassword.classList.remove("hidden");
-    googleHint.classList.add("hidden");
-    confirmInput.classList.add("hidden");
-    forgotBtn.classList.add("hidden");
-    passwordInput.value = "";
-    confirmInput.value = "";
-    actionBtn.textContent = "Continuar";
-    modeBadge.textContent = "Comprobando...";
-    passwordInput.focus();
-
-    // Detección de métodos (puede fallar en algunos entornos)
-    try {
-      continueBtn.disabled = true;
-      continueBtn.textContent = "Verificando...";
-
-      detectedMethods = await auth.fetchSignInMethodsForEmail(email);
-      console.log("Métodos detectados:", detectedMethods);
-
-      if (detectedMethods.includes("google.com") && !detectedMethods.includes("password")) {
-        // Solo Google → sugerimos Google y no pedimos contraseña
-        isNewUser = null;
-        modeBadge.textContent = "Cuenta Google";
-        googleHint.classList.remove("hidden");
-        // Opcional: podrías deshabilitar inputs si quieres
-      } else if (detectedMethods.includes("password")) {
-        // Login con contraseña
-        isNewUser = false;
-        modeBadge.textContent = "Iniciar sesión";
-        actionBtn.textContent = "Iniciar sesión";
-        forgotBtn.classList.remove("hidden");
-      } else if (detectedMethods.length === 0) {
-        // No se detecta nada → asumir registro inicialmente (verificaremos en intento)
-        isNewUser = true;
-        modeBadge.textContent = "Registrarse";
-        confirmInput.classList.remove("hidden");
-        actionBtn.textContent = "Registrarse";
-      }
-    } catch (e) {
-      console.warn("fetchSignInMethodsForEmail falló, continuamos con detección en el intento:", e);
-      // Modo desconocido: decidiremos en el click de action
-      isNewUser = null;
-      modeBadge.textContent = "Modo adaptativo";
-    } finally {
-      continueBtn.disabled = false;
-      continueBtn.textContent = "Continuar";
-    }
+  // Navegación entre pasos
+  loginChoiceBtn.onclick = () => {
+    menuStep.classList.add("hidden");
+    loginStep.classList.remove("hidden");
+  };
+  registerChoiceBtn.onclick = () => {
+    menuStep.classList.add("hidden");
+    registerStep.classList.remove("hidden");
+  };
+  backToMenu1.onclick = backToMenu2.onclick = () => {
+    loginStep.classList.add("hidden");
+    registerStep.classList.add("hidden");
+    menuStep.classList.remove("hidden");
   };
 
-  // Volver a email
-  backBtn.onclick = () => {
-    stepPassword.classList.add("hidden");
-    stepEmail.classList.remove("hidden");
-    emailInput.focus();
-  };
+  // LOGIN EMAIL / PASSWORD
+  loginBtn.onclick = async () => {
+    const email = loginEmail.value.trim().toLowerCase();
+    const password = loginPassword.value.trim();
 
-  // Acción principal (login/registro según detección o en el intento)
-  actionBtn.onclick = async () => {
-    const pass = passwordInput.value.trim();
-    const conf = confirmInput.value.trim();
-    if (!pass) return alert("Introduce tu contraseña.");
-
-    actionBtn.disabled = true;
-    const prevText = actionBtn.textContent;
-    actionBtn.textContent = "Procesando...";
+    if (!email || !password) return alert("Completa ambos campos.");
 
     try {
-      // Si creemos que es registro
-      if (isNewUser === true) {
-        if (!conf) { actionBtn.disabled = false; actionBtn.textContent = prevText; return alert("Confirma tu contraseña."); }
-        if (pass !== conf) { actionBtn.disabled = false; actionBtn.textContent = prevText; return alert("Las contraseñas no coinciden."); }
-        await auth.createUserWithEmailAndPassword(currentEmail, pass);
-        popup.style.display = "none";
-        return;
-      }
-
-      // Si creemos que es login
-      if (isNewUser === false) {
-        await auth.signInWithEmailAndPassword(currentEmail, pass);
-        popup.style.display = "none";
-        return;
-      }
-
-      // Modo adaptativo (cuando no confiamos en la detección)
-      // Intentamos login primero:
-      await auth.signInWithEmailAndPassword(currentEmail, pass);
+      await auth.signInWithEmailAndPassword(email, password);
       popup.style.display = "none";
-      return;
-
     } catch (error) {
-      console.error("Action error:", error);
-
-      // Manejo inteligente de errores:
+      console.error(error);
       if (error.code === "auth/user-not-found") {
-        // Puede ser cuenta Google o inexistente. Intentamos ver métodos (otra vez).
-        try {
-          const m = detectedMethods.length ? detectedMethods : await auth.fetchSignInMethodsForEmail(currentEmail);
-          if (m.includes("google.com") && !m.includes("password")) {
-            modeBadge.textContent = "Cuenta Google";
-            googleHint.classList.remove("hidden");
-            alert("Este correo está asociado a Google. Inicia con Google.");
-            actionBtn.disabled = false; actionBtn.textContent = prevText;
-            return;
-          }
-        } catch {}
-        // Si aún no sabemos, ofrecer registro
-        isNewUser = true;
-        modeBadge.textContent = "Registrarse";
-        confirmInput.classList.remove("hidden");
-        actionBtn.textContent = "Registrarse";
-        alert("No encontramos una cuenta con este correo. Puedes crearla ahora.");
-      } else if (error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
-        // La cuenta existe con password, pero la contraseña es incorrecta
-        isNewUser = false;
-        modeBadge.textContent = "Iniciar sesión";
-        actionBtn.textContent = "Iniciar sesión";
-        forgotBtn.classList.remove("hidden");
-        alert("Contraseña incorrecta. Inténtalo de nuevo o usa '¿Olvidaste tu contraseña?'");
-      } else if (error.code === "auth/too-many-requests") {
-        alert("Demasiados intentos. Espera unos minutos o restablece tu contraseña.");
+        alert("No existe una cuenta con este correo.");
+      } else if (error.code === "auth/wrong-password") {
+        alert("Contraseña incorrecta.");
       } else {
-        alert("Error: " + (error.message || error.code));
+        alert("Error al iniciar sesión: " + error.message);
       }
-    } finally {
-      actionBtn.disabled = false;
-      actionBtn.textContent = prevText;
     }
   };
 
-  // Google (botón del paso email)
-  googleBtnEmailStep.onclick = async () => {
+  // REGISTRO EMAIL / PASSWORD
+  registerBtn.onclick = async () => {
+    const email = registerEmail.value.trim().toLowerCase();
+    const pass = registerPassword.value.trim();
+    const conf = registerConfirm.value.trim();
+
+    if (!email || !pass || !conf) return alert("Completa todos los campos.");
+    if (pass !== conf) return alert("Las contraseñas no coinciden.");
+
     try {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      await auth.signInWithPopup(provider);
+      await auth.createUserWithEmailAndPassword(email, pass);
       popup.style.display = "none";
     } catch (error) {
       console.error(error);
-      alert("Error con Google: " + error.message);
-    }
-  };
-
-  // Google (botón del hint)
-  googleBtnHint.onclick = async () => {
-    try {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      await auth.signInWithPopup(provider);
-      popup.style.display = "none";
-    } catch (error) {
-      console.error(error);
-      alert("Error con Google: " + error.message);
-    }
-  };
-
-  // Olvidé mi contraseña
-  forgotBtn.onclick = async () => {
-    try {
-      await auth.sendPasswordResetEmail(currentEmail);
-      alert("Te hemos enviado un correo para restablecer tu contraseña.");
-    } catch (e) {
-      console.error(e);
-      alert("No se pudo enviar el correo de restablecimiento: " + (e.message || e.code));
+      if (error.code === "auth/email-already-in-use") {
+        alert("Ya existe una cuenta con este correo.");
+      } else if (error.code === "auth/weak-password") {
+        alert("La contraseña debe tener al menos 6 caracteres.");
+      } else {
+        alert("Error al registrarse: " + error.message);
+      }
     }
   };
 </script>
-
-
 
   <!-- Google Maps -->
   <script>
