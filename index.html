@@ -126,7 +126,9 @@
     <!-- Paso 1: correo -->
     <div id="stepEmail" class="flex flex-col gap-3">
       <input type="email" id="emailInput" placeholder="Correo electrónico" class="border p-3 rounded w-full text-center">
-      <button id="continueBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">Continuar</button>
+      <button id="continueBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">
+        Continuar
+      </button>
 
       <div class="flex items-center my-3">
         <div class="flex-grow border-t border-gray-300"></div>
@@ -144,7 +146,9 @@
       <button id="backBtn" class="text-blue-500 text-sm text-left">← Cambiar correo</button>
       <input type="password" id="passwordInput" placeholder="Contraseña" class="border p-3 rounded w-full">
       <input type="password" id="confirmInput" placeholder="Confirmar contraseña" class="border p-3 rounded w-full hidden">
-      <button id="actionBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">Continuar</button>
+      <button id="actionBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">
+        Continuar
+      </button>
     </div>
   </div>
 </div>
@@ -165,27 +169,34 @@
   let currentEmail = "";
   let isNewUser = false;
 
+  // Mostrar/ocultar popup según la sesión
   auth.onAuthStateChanged((user) => {
     popup.style.display = user ? "none" : "flex";
   });
 
+  // Volver al paso de correo
   backBtn.onclick = () => {
     stepPassword.classList.add("hidden");
     stepEmail.classList.remove("hidden");
     emailInput.focus();
   };
 
+  // 🔹 CONTINUAR: detectar si el correo ya existe, con correcciones
   continueBtn.onclick = async () => {
-    const email = emailInput.value.trim();
+    let email = emailInput.value.trim().toLowerCase(); // normaliza
     if (!email) return alert("Por favor, introduce tu correo electrónico.");
+
+    continueBtn.disabled = true;
+    continueBtn.textContent = "Verificando...";
 
     try {
       const methods = await auth.fetchSignInMethodsForEmail(email);
+      console.log("Métodos detectados para:", email, methods);
       currentEmail = email;
 
-      // Si tiene cuenta con Google → sugerir continuar con Google
+      // 🔸 Caso 1: cuenta Google
       if (methods.includes("google.com")) {
-        const confirmGoogle = confirm("Este correo está registrado con Google. ¿Quieres continuar con Google?");
+        const confirmGoogle = confirm("Este correo ya está registrado con Google. ¿Quieres continuar con Google?");
         if (confirmGoogle) {
           const provider = new firebase.auth.GoogleAuthProvider();
           await auth.signInWithPopup(provider);
@@ -194,32 +205,30 @@
         return;
       }
 
-      // Si tiene cuenta con contraseña → login
+      // 🔸 Caso 2: cuenta con contraseña existente
       if (methods.includes("password")) {
         isNewUser = false;
         mostrarPasswordStep("Iniciar sesión");
-      } else {
-        // Si no existe → registro
+        return;
+      }
+
+      // 🔸 Caso 3: cuenta no existente (registro)
+      if (methods.length === 0) {
         isNewUser = true;
         mostrarPasswordStep("Registrarse");
+        return;
       }
+
     } catch (error) {
-      console.error(error);
+      console.error("Error al verificar el correo:", error);
       alert("Error al verificar el correo: " + error.message);
+    } finally {
+      continueBtn.disabled = false;
+      continueBtn.textContent = "Continuar";
     }
   };
 
-  googleBtn.onclick = async () => {
-    try {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      await auth.signInWithPopup(provider);
-      popup.style.display = "none";
-    } catch (error) {
-      console.error(error);
-      alert("Error al iniciar sesión con Google: " + error.message);
-    }
-  };
-
+  // 🔹 Login o registro según el tipo detectado
   function mostrarPasswordStep(tipo) {
     stepEmail.classList.add("hidden");
     stepPassword.classList.remove("hidden");
@@ -260,7 +269,20 @@
       }
     };
   }
+
+  // 🔹 Iniciar sesión con Google directamente
+  googleBtn.onclick = async () => {
+    try {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      await auth.signInWithPopup(provider);
+      popup.style.display = "none";
+    } catch (error) {
+      console.error(error);
+      alert("Error al iniciar sesión con Google: " + error.message);
+    }
+  };
 </script>
+
 
 
   <!-- Google Maps -->
