@@ -169,21 +169,21 @@
   let currentEmail = "";
   let isNewUser = false;
 
-  // Mostrar/ocultar popup según la sesión
+  // 🔹 Mostrar/ocultar popup según sesión
   auth.onAuthStateChanged((user) => {
     popup.style.display = user ? "none" : "flex";
   });
 
-  // Volver al paso de correo
+  // 🔹 Volver al paso de correo
   backBtn.onclick = () => {
     stepPassword.classList.add("hidden");
     stepEmail.classList.remove("hidden");
     emailInput.focus();
   };
 
-  // 🔹 CONTINUAR: detectar si el correo ya existe, con correcciones
+  // 🔹 CONTINUAR: detectar si el correo ya existe (versión robusta)
   continueBtn.onclick = async () => {
-    let email = emailInput.value.trim().toLowerCase(); // normaliza
+    let email = emailInput.value.trim().toLowerCase();
     if (!email) return alert("Por favor, introduce tu correo electrónico.");
 
     continueBtn.disabled = true;
@@ -191,12 +191,16 @@
 
     try {
       const methods = await auth.fetchSignInMethodsForEmail(email);
-      console.log("Métodos detectados para:", email, methods);
+      console.log("Métodos detectados:", methods);
       currentEmail = email;
 
-      // 🔸 Caso 1: cuenta Google
+      // Caso 1: cuenta Google
       if (methods.includes("google.com")) {
-        const confirmGoogle = confirm("Este correo ya está registrado con Google. ¿Quieres continuar con Google?");
+        continueBtn.disabled = false;
+        continueBtn.textContent = "Continuar";
+        const confirmGoogle = confirm(
+          "Este correo ya está registrado con Google. ¿Quieres continuar con Google?"
+        );
         if (confirmGoogle) {
           const provider = new firebase.auth.GoogleAuthProvider();
           await auth.signInWithPopup(provider);
@@ -205,18 +209,34 @@
         return;
       }
 
-      // 🔸 Caso 2: cuenta con contraseña existente
+      // Caso 2: cuenta con contraseña existente
       if (methods.includes("password")) {
         isNewUser = false;
         mostrarPasswordStep("Iniciar sesión");
         return;
       }
 
-      // 🔸 Caso 3: cuenta no existente (registro)
+      // Caso 3: Firebase devolvió vacío, comprobamos manualmente
       if (methods.length === 0) {
-        isNewUser = true;
-        mostrarPasswordStep("Registrarse");
-        return;
+        console.log("⚠️ No se detectaron métodos, comprobando manualmente...");
+
+        try {
+          // Intentar iniciar sesión con una contraseña dummy
+          await auth.signInWithEmailAndPassword(email, "dummy-password-test");
+        } catch (err) {
+          if (err.code === "auth/user-not-found") {
+            // No existe → registro
+            isNewUser = true;
+            mostrarPasswordStep("Registrarse");
+            return;
+          }
+          if (err.code === "auth/wrong-password") {
+            // Sí existe → login
+            isNewUser = false;
+            mostrarPasswordStep("Iniciar sesión");
+            return;
+          }
+        }
       }
 
     } catch (error) {
@@ -228,7 +248,7 @@
     }
   };
 
-  // 🔹 Login o registro según el tipo detectado
+  // 🔹 Mostrar paso de contraseña (login o registro)
   function mostrarPasswordStep(tipo) {
     stepEmail.classList.add("hidden");
     stepPassword.classList.remove("hidden");
@@ -282,6 +302,7 @@
     }
   };
 </script>
+
 
 
 
