@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FitRewards | Tu progreso</title>
+  <title>GanaFit | Tu progreso</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Poppins', sans-serif; }
     .card-bg { background: linear-gradient(135deg, #3b82f6, #10b981); }
     .progress-bar { transition: width 2s ease-in-out; }
+    .nav-active { color: #3b82f6; font-weight: 600; }
   </style>
 </head>
 
@@ -17,84 +18,142 @@
 
   <!-- NAVBAR -->
   <nav class="flex justify-between items-center px-6 py-4 bg-white shadow-md sticky top-0 z-50">
-    <h1 class="text-2xl font-bold text-blue-600">FitRewards</h1>
+    <h1 class="text-2xl font-bold text-blue-600">GanaFit</h1>
     <div class="flex gap-6 text-gray-600">
-      <a href="#" class="hover:text-blue-600 font-medium">Monedero</a>
-      <a href="#" class="hover:text-blue-600 font-medium">Perfil</a>
-      <a href="#" class="hover:text-blue-600 font-medium">Ayuda</a>
+      <a href="#" id="menuMonedero" class="hover:text-blue-600 font-medium">Monedero</a>
+      <a href="#" id="menuPerfil" class="hover:text-blue-600 font-medium">Perfil</a>
     </div>
   </nav>
 
-  <!-- SECCIÓN 1 -->
-  <section class="max-w-5xl mx-auto mt-10 px-6">
-    <div class="bg-white rounded-2xl shadow p-6 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-      <div>
-        <h2 class="text-xl font-bold text-gray-800">Hola, Eduardo 👋</h2>
-      </div>
-      <div class="flex flex-col md:flex-row items-center gap-10 mt-4 md:mt-0">
-        <div>
-          <p class="text-sm text-gray-500">Saldo total</p>
-          <h3 class="text-2xl font-bold text-green-600">10,25 €</h3>
-        </div>
-        <div>
-          <p class="text-sm text-gray-500">Apuesta en curso</p>
-          <h3 class="text-2xl font-bold text-blue-600">5 / 15 días</h3>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECCIÓN 2 -->
-  <section class="max-w-5xl mx-auto mt-10 px-6 grid md:grid-cols-2 gap-6">
-    <!-- Previsión -->
-    <div class="bg-white rounded-2xl shadow p-6">
-      <h3 class="text-lg font-semibold mb-4 text-gray-800">Nuestra Previsión</h3>
-      <div class="flex justify-between text-sm text-gray-500 mb-2">
-        <p>Inicio: 5 Oct 2025</p>
-        <p>Fin: 5 Nov 2025</p>
-      </div>
-      <div class="w-full bg-gray-200 rounded-full h-4 mb-3 relative overflow-hidden">
-        <div id="progressBar" class="bg-green-500 h-4 rounded-full progress-bar" style="width: 0%;"></div>
-        <span class="absolute right-0 top-[-24px] text-xs text-gray-600">Objetivo: 100 €</span>
-      </div>
-      <p class="text-sm text-gray-500 mt-2">
-        Progreso actual: 
-        <span id="progressText" class="font-semibold text-green-600">0 € / 100 €</span>
-      </p>
-    </div>
-
-    <!-- FitWallet -->
-    <div class="bg-white rounded-2xl shadow p-6 flex flex-col items-center justify-center">
-      <h3 class="text-lg font-semibold mb-4 text-gray-800">FitWallet</h3>
-      <div class="card-bg w-full max-w-[320px] h-[200px] rounded-2xl text-white shadow-lg flex flex-col justify-between p-6 relative overflow-hidden">
-        <div class="flex justify-between items-start">
-          <h4 class="text-xl font-bold tracking-wide">FitRewards</h4>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" class="h-6 opacity-90">
-        </div>
-        <div>
-          <p class="tracking-widest text-sm">**** **** **** 9241</p>
-          <div class="flex justify-between mt-2 text-xs">
-            <p>Eduardo</p>
-            <p>12/28</p>
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main id="mainContent">
+    <!-- SECCIÓN INICIAL -->
+    <section id="homeSection">
+      <!-- SECCIÓN 1 -->
+      <section class="max-w-5xl mx-auto mt-10 px-6">
+        <div class="bg-white rounded-2xl shadow p-6 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+          <div>
+            <h2 class="text-xl font-bold text-gray-800">Hola, Eduardo 👋</h2>
+          </div>
+          <div class="flex flex-col md:flex-row items-center gap-10 mt-4 md:mt-0">
+            <div>
+              <p class="text-sm text-gray-500">Saldo total</p>
+              <h3 class="text-2xl font-bold text-green-600">10,25 €</h3>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Apuesta en curso</p>
+              <h3 class="text-2xl font-bold text-blue-600">5 / 15 días</h3>
+            </div>
           </div>
         </div>
-        <div class="absolute bottom-4 right-6 text-2xl font-bold text-white drop-shadow-lg">
-          €10.25
+      </section>
+
+      <!-- SECCIÓN 2 -->
+      <section class="max-w-5xl mx-auto mt-10 px-6 grid md:grid-cols-2 gap-6">
+        <!-- Previsión -->
+        <div class="bg-white rounded-2xl shadow p-6">
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">Nuestra Previsión</h3>
+          <div class="flex justify-between text-sm text-gray-500 mb-2">
+            <p>Inicio: 5 Oct 2025</p>
+            <p>Fin: 5 Nov 2025</p>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-4 mb-3 relative overflow-hidden">
+            <div id="progressBar" class="bg-green-500 h-4 rounded-full progress-bar" style="width: 0%;"></div>
+            <span class="absolute right-0 top-[-24px] text-xs text-gray-600">Objetivo: 100 €</span>
+          </div>
+          <p class="text-sm text-gray-500 mt-2">
+            Progreso actual:
+            <span id="progressText" class="font-semibold text-green-600">0 € / 100 €</span>
+          </p>
+        </div>
+
+        <!-- GanaWallet -->
+        <div class="bg-white rounded-2xl shadow p-6 flex flex-col items-center justify-center">
+          <h3 class="text-lg font-semibold mb-4 text-gray-800">GanaWallet</h3>
+          <div class="card-bg w-full max-w-[320px] h-[200px] rounded-2xl text-white shadow-lg flex flex-col justify-between p-6 relative overflow-hidden">
+            <div class="flex justify-between items-start">
+              <h4 class="text-xl font-bold tracking-wide">GanaFit</h4>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" class="h-6 opacity-90">
+            </div>
+            <div>
+              <p class="tracking-widest text-sm">**** **** **** 9241</p>
+              <div class="flex justify-between mt-2 text-xs">
+                <p>Eduardo</p>
+                <p>12/28</p>
+              </div>
+            </div>
+            <div class="absolute bottom-4 right-6 text-2xl font-bold text-white drop-shadow-lg">
+              €10.25
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN MAPA -->
+      <section class="max-w-6xl mx-auto mt-16 px-6">
+        <h3 class="text-2xl font-bold mb-4 text-gray-800 text-center">🛍️ Tiendas afiliadas cerca de ti</h3>
+        <p class="text-center text-gray-500 mb-6">Descubre dónde puedes usar tu saldo GanaFit</p>
+        <div id="map" class="w-full h-[400px] rounded-2xl shadow-md border border-gray-200"></div>
+      </section>
+    </section>
+
+    <!-- SECCIÓN MONEDERO -->
+    <section id="walletSection" class="hidden max-w-4xl mx-auto mt-10 px-6">
+      <h2 class="text-2xl font-bold mb-6 text-gray-800">Mi monedero</h2>
+
+      <div class="bg-white shadow rounded-2xl p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-semibold text-blue-600">GanaFit</h3>
+          <h3 class="text-2xl font-bold text-green-600">10,25 €</h3>
+        </div>
+
+        <div class="flex justify-between items-center mb-3">
+          <p class="font-semibold text-gray-700">Últimos movimientos</p>
+          <button class="text-blue-600 text-sm hover:underline">Mostrar más</button>
+        </div>
+
+        <div class="space-y-2 text-gray-600">
+          <div class="flex justify-between items-center">
+            <span>Apuesta</span>
+            <span class="text-green-600 font-semibold">+10€ ⬆️</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span>Compra en Intersport</span>
+            <span class="text-red-500 font-semibold">-35€ ⬇️</span>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- SECCIÓN 3 -->
-  <section class="max-w-6xl mx-auto mt-16 px-6">
-    <h3 class="text-2xl font-bold mb-4 text-gray-800 text-center">🛍️ Tiendas afiliadas cerca de ti</h3>
-    <p class="text-center text-gray-500 mb-6">Descubre dónde puedes usar tu saldo FitRewards</p>
-    <div id="map" class="w-full h-[400px] rounded-2xl shadow-md border border-gray-200"></div>
-  </section>
+      <div class="flex justify-center gap-10 mt-8">
+        <div class="flex flex-col items-center">
+          <button class="bg-blue-600 text-white p-6 rounded-full shadow-lg hover:bg-blue-700 text-2xl">€</button>
+          <p class="mt-2 text-sm font-medium">Sacar dinero</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <button class="bg-green-600 text-white p-6 rounded-full shadow-lg hover:bg-green-700 text-2xl">📘</button>
+          <p class="mt-2 text-sm font-medium">Resumen mensual</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN PERFIL -->
+    <section id="profileSection" class="hidden max-w-4xl mx-auto mt-10 px-6">
+      <h2 class="text-3xl font-bold text-gray-800 mb-4">Eduardo Martínez</h2>
+      <p class="text-gray-600 mb-6">Correo electrónico: <span class="font-semibold">eduardo@example.com</span></p>
+
+      <div class="bg-white rounded-2xl shadow p-6 space-y-4">
+        <button class="block w-full text-left text-gray-700 hover:text-blue-600">Política de Privacidad</button>
+        <button class="block w-full text-left text-gray-700 hover:text-blue-600">Ayuda</button>
+        <button id="logoutBtn" class="block w-full text-left text-gray-700 hover:text-blue-600">Cerrar sesión</button>
+        <button class="block w-full text-left text-gray-700 hover:text-blue-600">Sobre nosotros</button>
+        <button class="block w-full text-left text-gray-700 hover:text-blue-600">Consentimientos y derechos</button>
+      </div>
+    </section>
+  </main>
 
   <!-- FOOTER -->
   <footer class="text-center text-gray-500 text-sm py-6 mt-16 bg-gray-100">
-    © 2025 FitRewards. Todos los derechos reservados.
+    © 2025 GanaFit. Todos los derechos reservados.
   </footer>
 
   <!-- Firebase -->
@@ -117,132 +176,140 @@
     const auth = firebase.auth();
   </script>
 
-<!-- POPUP DE AUTENTICACIÓN SIMPLE -->
-<div id="authPopup" class="fixed inset-0 bg-white/90 backdrop-blur-md flex items-center justify-center z-50 p-6">
-  <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-8 text-center">
-    <h2 class="text-2xl font-bold mb-2 text-gray-800">Bienvenido a FitRewards</h2>
-    <p class="text-gray-500 mb-6 text-sm">Inicia sesión o crea una cuenta para continuar</p>
+  <!-- POPUP DE AUTENTICACIÓN -->
+  <div id="authPopup" class="fixed inset-0 bg-white/90 backdrop-blur-md flex items-center justify-center z-50 p-6">
+    <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-8 text-center">
+      <h2 class="text-2xl font-bold mb-2 text-gray-800">Bienvenido a GanaFit</h2>
+      <p class="text-gray-500 mb-6 text-sm">Inicia sesión o crea una cuenta para continuar</p>
 
-    <!-- Menú principal -->
-    <div id="menuStep" class="flex flex-col gap-3">
-      <button id="loginChoiceBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">
-        Iniciar sesión
-      </button>
-      <button id="registerChoiceBtn" class="bg-green-600 text-white p-3 rounded font-semibold hover:bg-green-700 transition">
-        Registrarse
-      </button>
-    </div>
+      <!-- Menú principal -->
+      <div id="menuStep" class="flex flex-col gap-3">
+        <button id="loginChoiceBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">
+          Iniciar sesión
+        </button>
+        <button id="registerChoiceBtn" class="bg-green-600 text-white p-3 rounded font-semibold hover:bg-green-700 transition">
+          Registrarse
+        </button>
+      </div>
 
-    <!-- Paso de inicio de sesión -->
-    <div id="loginStep" class="flex flex-col gap-3 hidden">
-      <button id="backToMenu1" class="text-blue-500 text-sm text-left">← Volver</button>
-      <input type="email" id="loginEmail" placeholder="Correo electrónico" class="border p-3 rounded w-full">
-      <input type="password" id="loginPassword" placeholder="Contraseña" class="border p-3 rounded w-full">
-      <button id="loginBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">
-        Iniciar sesión
-      </button>
-    </div>
+      <!-- Paso de inicio de sesión -->
+      <div id="loginStep" class="flex flex-col gap-3 hidden">
+        <button id="backToMenu1" class="text-blue-500 text-sm text-left">← Volver</button>
+        <input type="email" id="loginEmail" placeholder="Correo electrónico" class="border p-3 rounded w-full">
+        <input type="password" id="loginPassword" placeholder="Contraseña" class="border p-3 rounded w-full">
+        <button id="loginBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">
+          Iniciar sesión
+        </button>
+      </div>
 
-    <!-- Paso de registro -->
-    <div id="registerStep" class="flex flex-col gap-3 hidden">
-      <button id="backToMenu2" class="text-blue-500 text-sm text-left">← Volver</button>
-      <input type="email" id="registerEmail" placeholder="Correo electrónico" class="border p-3 rounded w-full">
-      <input type="password" id="registerPassword" placeholder="Contraseña" class="border p-3 rounded w-full">
-      <input type="password" id="registerConfirm" placeholder="Confirmar contraseña" class="border p-3 rounded w-full">
-      <button id="registerBtn" class="bg-green-600 text-white p-3 rounded font-semibold hover:bg-green-700 transition">
-        Registrarse
-      </button>
+      <!-- Paso de registro -->
+      <div id="registerStep" class="flex flex-col gap-3 hidden">
+        <button id="backToMenu2" class="text-blue-500 text-sm text-left">← Volver</button>
+        <input type="email" id="registerEmail" placeholder="Correo electrónico" class="border p-3 rounded w-full">
+        <input type="password" id="registerPassword" placeholder="Contraseña" class="border p-3 rounded w-full">
+        <input type="password" id="registerConfirm" placeholder="Confirmar contraseña" class="border p-3 rounded w-full">
+        <button id="registerBtn" class="bg-green-600 text-white p-3 rounded font-semibold hover:bg-green-700 transition">
+          Registrarse
+        </button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- SCRIPT DE AUTENTICACIÓN -->
-<script>
-  const popup = document.getElementById("authPopup");
-  const menuStep = document.getElementById("menuStep");
-  const loginStep = document.getElementById("loginStep");
-  const registerStep = document.getElementById("registerStep");
+  <!-- SCRIPT DE AUTENTICACIÓN + SPA -->
+  <script>
+    const popup = document.getElementById("authPopup");
+    const menuStep = document.getElementById("menuStep");
+    const loginStep = document.getElementById("loginStep");
+    const registerStep = document.getElementById("registerStep");
 
-  const loginChoiceBtn = document.getElementById("loginChoiceBtn");
-  const registerChoiceBtn = document.getElementById("registerChoiceBtn");
-  const backToMenu1 = document.getElementById("backToMenu1");
-  const backToMenu2 = document.getElementById("backToMenu2");
+    const loginChoiceBtn = document.getElementById("loginChoiceBtn");
+    const registerChoiceBtn = document.getElementById("registerChoiceBtn");
+    const backToMenu1 = document.getElementById("backToMenu1");
+    const backToMenu2 = document.getElementById("backToMenu2");
 
-  const loginEmail = document.getElementById("loginEmail");
-  const loginPassword = document.getElementById("loginPassword");
-  const loginBtn = document.getElementById("loginBtn");
+    const loginEmail = document.getElementById("loginEmail");
+    const loginPassword = document.getElementById("loginPassword");
+    const loginBtn = document.getElementById("loginBtn");
 
-  const registerEmail = document.getElementById("registerEmail");
-  const registerPassword = document.getElementById("registerPassword");
-  const registerConfirm = document.getElementById("registerConfirm");
-  const registerBtn = document.getElementById("registerBtn");
+    const registerEmail = document.getElementById("registerEmail");
+    const registerPassword = document.getElementById("registerPassword");
+    const registerConfirm = document.getElementById("registerConfirm");
+    const registerBtn = document.getElementById("registerBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-  // Mostrar/ocultar popup según sesión
-  auth.onAuthStateChanged((user) => {
-    popup.style.display = user ? "none" : "flex";
-  });
+    // SPA: Secciones
+    const homeSection = document.getElementById("homeSection");
+    const walletSection = document.getElementById("walletSection");
+    const profileSection = document.getElementById("profileSection");
 
-  // Navegación entre pasos
-  loginChoiceBtn.onclick = () => {
-    menuStep.classList.add("hidden");
-    loginStep.classList.remove("hidden");
-  };
-  registerChoiceBtn.onclick = () => {
-    menuStep.classList.add("hidden");
-    registerStep.classList.remove("hidden");
-  };
-  backToMenu1.onclick = backToMenu2.onclick = () => {
-    loginStep.classList.add("hidden");
-    registerStep.classList.add("hidden");
-    menuStep.classList.remove("hidden");
-  };
+    const menuMonedero = document.getElementById("menuMonedero");
+    const menuPerfil = document.getElementById("menuPerfil");
 
-  // LOGIN EMAIL / PASSWORD
-  loginBtn.onclick = async () => {
-    const email = loginEmail.value.trim().toLowerCase();
-    const password = loginPassword.value.trim();
-
-    if (!email || !password) return alert("Completa ambos campos.");
-
-    try {
-      await auth.signInWithEmailAndPassword(email, password);
-      popup.style.display = "none";
-    } catch (error) {
-      console.error(error);
-      if (error.code === "auth/user-not-found") {
-        alert("No existe una cuenta con este correo.");
-      } else if (error.code === "auth/wrong-password") {
-        alert("Contraseña incorrecta.");
-      } else {
-        alert("Error al iniciar sesión: " + error.message);
-      }
+    function showSection(section) {
+      [homeSection, walletSection, profileSection].forEach(s => s.classList.add("hidden"));
+      section.classList.remove("hidden");
     }
-  };
 
-  // REGISTRO EMAIL / PASSWORD
-  registerBtn.onclick = async () => {
-    const email = registerEmail.value.trim().toLowerCase();
-    const pass = registerPassword.value.trim();
-    const conf = registerConfirm.value.trim();
+    menuMonedero.addEventListener("click", e => {
+      e.preventDefault();
+      showSection(walletSection);
+      menuMonedero.classList.add("nav-active");
+      menuPerfil.classList.remove("nav-active");
+    });
 
-    if (!email || !pass || !conf) return alert("Completa todos los campos.");
-    if (pass !== conf) return alert("Las contraseñas no coinciden.");
+    menuPerfil.addEventListener("click", e => {
+      e.preventDefault();
+      showSection(profileSection);
+      menuPerfil.classList.add("nav-active");
+      menuMonedero.classList.remove("nav-active");
+    });
 
-    try {
-      await auth.createUserWithEmailAndPassword(email, pass);
-      popup.style.display = "none";
-    } catch (error) {
-      console.error(error);
-      if (error.code === "auth/email-already-in-use") {
-        alert("Ya existe una cuenta con este correo.");
-      } else if (error.code === "auth/weak-password") {
-        alert("La contraseña debe tener al menos 6 caracteres.");
-      } else {
-        alert("Error al registrarse: " + error.message);
-      }
-    }
-  };
-</script>
+    // Mostrar home por defecto
+    showSection(homeSection);
+
+    // Auth
+    auth.onAuthStateChanged((user) => {
+      popup.style.display = user ? "none" : "flex";
+    });
+
+    loginChoiceBtn.onclick = () => {
+      menuStep.classList.add("hidden");
+      loginStep.classList.remove("hidden");
+    };
+    registerChoiceBtn.onclick = () => {
+      menuStep.classList.add("hidden");
+      registerStep.classList.remove("hidden");
+    };
+    backToMenu1.onclick = backToMenu2.onclick = () => {
+      loginStep.classList.add("hidden");
+      registerStep.classList.add("hidden");
+      menuStep.classList.remove("hidden");
+    };
+
+    loginBtn.onclick = async () => {
+      const email = loginEmail.value.trim().toLowerCase();
+      const password = loginPassword.value.trim();
+      if (!email || !password) return alert("Completa ambos campos.");
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        popup.style.display = "none";
+      } catch (error) { alert("Error: " + error.message); }
+    };
+
+    registerBtn.onclick = async () => {
+      const email = registerEmail.value.trim().toLowerCase();
+      const pass = registerPassword.value.trim();
+      const conf = registerConfirm.value.trim();
+      if (!email || !pass || !conf) return alert("Completa todos los campos.");
+      if (pass !== conf) return alert("Las contraseñas no coinciden.");
+      try {
+        await auth.createUserWithEmailAndPassword(email, pass);
+        popup.style.display = "none";
+      } catch (error) { alert("Error: " + error.message); }
+    };
+
+    logoutBtn.onclick = () => auth.signOut();
+  </script>
 
   <!-- Google Maps -->
   <script>
