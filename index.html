@@ -242,6 +242,77 @@
       </div>
     </div>
   </div>
+<!-- 🔐 SCRIPT DE AUTENTICACIÓN -->
+<script>
+  const authPopup = document.getElementById("authPopup");
+  const menuStep = document.getElementById("menuStep");
+  const loginStep = document.getElementById("loginStep");
+  const registerStep = document.getElementById("registerStep");
+
+  const loginChoiceBtn = document.getElementById("loginChoiceBtn");
+  const registerChoiceBtn = document.getElementById("registerChoiceBtn");
+  const backToMenu1 = document.getElementById("backToMenu1");
+  const backToMenu2 = document.getElementById("backToMenu2");
+
+  const loginEmail = document.getElementById("loginEmail");
+  const loginPassword = document.getElementById("loginPassword");
+  const loginBtn = document.getElementById("loginBtn");
+
+  const registerEmail = document.getElementById("registerEmail");
+  const registerPassword = document.getElementById("registerPassword");
+  const registerConfirm = document.getElementById("registerConfirm");
+  const registerBtn = document.getElementById("registerBtn");
+
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  // 👇 Mostrar / ocultar pasos del popup
+  loginChoiceBtn.onclick = () => {
+    menuStep.classList.add("hidden");
+    loginStep.classList.remove("hidden");
+  };
+
+  registerChoiceBtn.onclick = () => {
+    menuStep.classList.add("hidden");
+    registerStep.classList.remove("hidden");
+  };
+
+  backToMenu1.onclick = backToMenu2.onclick = () => {
+    loginStep.classList.add("hidden");
+    registerStep.classList.add("hidden");
+    menuStep.classList.remove("hidden");
+  };
+
+  // 👇 Iniciar sesión
+  loginBtn.onclick = async () => {
+    const email = loginEmail.value.trim();
+    const password = loginPassword.value.trim();
+    if (!email || !password) return alert("Completa ambos campos.");
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      authPopup.style.display = "none";
+    } catch (err) {
+      alert("Error al iniciar sesión: " + err.message);
+    }
+  };
+
+  // 👇 Registrarse
+  registerBtn.onclick = async () => {
+    const email = registerEmail.value.trim();
+    const pass = registerPassword.value.trim();
+    const conf = registerConfirm.value.trim();
+    if (!email || !pass || !conf) return alert("Completa todos los campos.");
+    if (pass !== conf) return alert("Las contraseñas no coinciden.");
+    try {
+      await auth.createUserWithEmailAndPassword(email, pass);
+      authPopup.style.display = "none";
+    } catch (err) {
+      alert("Error al registrarse: " + err.message);
+    }
+  };
+
+  // 👇 Cerrar sesión
+  if (logoutBtn) logoutBtn.onclick = () => auth.signOut();
+</script>
 
   <!-- GOOGLE MAPS -->
   <script>
