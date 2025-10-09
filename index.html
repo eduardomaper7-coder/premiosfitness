@@ -30,7 +30,6 @@
   <main id="mainContent">
     <!-- SECCIÓN INICIAL (HOME) -->
     <section id="homeSection">
-      <!-- Tarjeta saludo y saldo -->
       <section class="max-w-5xl mx-auto mt-10 px-6">
         <div class="bg-white rounded-2xl shadow p-6 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
           <div>
@@ -41,7 +40,6 @@
               <p class="text-sm text-gray-500">Saldo total</p>
               <h3 class="text-2xl font-bold text-green-600">10,25 €</h3>
             </div>
-            <!-- Aquí irá el botón/estado de apuesta -->
             <div id="apuestaContainer"></div>
           </div>
         </div>
@@ -49,7 +47,6 @@
 
       <!-- Previsión + GanaWallet -->
       <section class="max-w-5xl mx-auto mt-10 px-6 grid md:grid-cols-2 gap-6">
-        <!-- Previsión -->
         <div class="bg-white rounded-2xl shadow p-6">
           <h3 class="text-lg font-semibold mb-4 text-gray-800">Nuestra Previsión</h3>
           <div class="flex justify-between text-sm text-gray-500 mb-2">
@@ -61,12 +58,10 @@
             <span class="absolute right-0 top-[-24px] text-xs text-gray-600">Objetivo: 100 €</span>
           </div>
           <p class="text-sm text-gray-500 mt-2">
-            Progreso actual:
-            <span id="progressText" class="font-semibold text-green-600">0 € / 100 €</span>
+            Progreso actual: <span id="progressText" class="font-semibold text-green-600">0 € / 100 €</span>
           </p>
         </div>
 
-        <!-- GanaWallet -->
         <div class="bg-white rounded-2xl shadow p-6 flex flex-col items-center justify-center">
           <h3 class="text-lg font-semibold mb-4 text-gray-800">GanaWallet</h3>
           <div class="card-bg w-full max-w-[320px] h-[200px] rounded-2xl text-white shadow-lg flex flex-col justify-between p-6 relative overflow-hidden">
@@ -99,18 +94,15 @@
     <!-- SECCIÓN MONEDERO -->
     <section id="walletSection" class="hidden max-w-4xl mx-auto mt-10 px-6">
       <h2 class="text-2xl font-bold mb-6 text-gray-800">Mi monedero</h2>
-
       <div class="bg-white shadow rounded-2xl p-6">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-xl font-semibold text-blue-600">GanaFit</h3>
           <h3 class="text-2xl font-bold text-green-600">10,25 €</h3>
         </div>
-
         <div class="flex justify-between items-center mb-3">
           <p class="font-semibold text-gray-700">Últimos movimientos</p>
           <button class="text-blue-600 text-sm hover:underline">Mostrar más</button>
         </div>
-
         <div class="space-y-2 text-gray-600">
           <div class="flex justify-between items-center">
             <span>Apuesta</span>
@@ -122,7 +114,6 @@
           </div>
         </div>
       </div>
-
       <div class="flex justify-center gap-10 mt-8">
         <div class="flex flex-col items-center">
           <button class="bg-blue-600 text-white p-6 rounded-full shadow-lg hover:bg-blue-700 text-2xl">€</button>
@@ -139,7 +130,6 @@
     <section id="profileSection" class="hidden max-w-4xl mx-auto mt-10 px-6">
       <h2 class="text-3xl font-bold text-gray-800 mb-4">Eduardo Martínez</h2>
       <p class="text-gray-600 mb-6">Correo electrónico: <span class="font-semibold">eduardo@example.com</span></p>
-
       <div class="bg-white rounded-2xl shadow p-6 space-y-4">
         <button class="block w-full text-left text-gray-700 hover:text-blue-600">Política de Privacidad</button>
         <button class="block w-full text-left text-gray-700 hover:text-blue-600">Ayuda</button>
@@ -150,7 +140,6 @@
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer class="text-center text-gray-500 text-sm py-6 mt-16 bg-gray-100">
     © 2025 GanaFit. Todos los derechos reservados.
   </footer>
@@ -176,182 +165,48 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
   </script>
-
   <!-- POPUP DE AUTENTICACIÓN -->
   <div id="authPopup" class="fixed inset-0 bg-white/90 backdrop-blur-md flex items-center justify-center z-50 p-6">
     <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-8 text-center">
       <h2 class="text-2xl font-bold mb-2 text-gray-800">Bienvenido a GanaFit</h2>
       <p class="text-gray-500 mb-6 text-sm">Inicia sesión o crea una cuenta para continuar</p>
 
-      <!-- Menú principal -->
       <div id="menuStep" class="flex flex-col gap-3">
-        <button id="loginChoiceBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">
-          Iniciar sesión
-        </button>
-        <button id="registerChoiceBtn" class="bg-green-600 text-white p-3 rounded font-semibold hover:bg-green-700 transition">
-          Registrarse
-        </button>
+        <button id="loginChoiceBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">Iniciar sesión</button>
+        <button id="registerChoiceBtn" class="bg-green-600 text-white p-3 rounded font-semibold hover:bg-green-700 transition">Registrarse</button>
       </div>
 
-      <!-- Paso de inicio de sesión -->
       <div id="loginStep" class="flex flex-col gap-3 hidden">
         <button id="backToMenu1" class="text-blue-500 text-sm text-left">← Volver</button>
         <input type="email" id="loginEmail" placeholder="Correo electrónico" class="border p-3 rounded w-full">
         <input type="password" id="loginPassword" placeholder="Contraseña" class="border p-3 rounded w-full">
-        <button id="loginBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">
-          Iniciar sesión
-        </button>
+        <button id="loginBtn" class="bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 transition">Iniciar sesión</button>
       </div>
 
-      <!-- Paso de registro -->
       <div id="registerStep" class="flex flex-col gap-3 hidden">
         <button id="backToMenu2" class="text-blue-500 text-sm text-left">← Volver</button>
         <input type="email" id="registerEmail" placeholder="Correo electrónico" class="border p-3 rounded w-full">
         <input type="password" id="registerPassword" placeholder="Contraseña" class="border p-3 rounded w-full">
         <input type="password" id="registerConfirm" placeholder="Confirmar contraseña" class="border p-3 rounded w-full">
-        <button id="registerBtn" class="bg-green-600 text-white p-3 rounded font-semibold hover:bg-green-700 transition">
-          Registrarse
-        </button>
+        <button id="registerBtn" class="bg-green-600 text-white p-3 rounded font-semibold hover:bg-green-700 transition">Registrarse</button>
       </div>
     </div>
   </div>
 
-  <!-- SCRIPT DE AUTENTICACIÓN + SPA -->
-  <script>
-    // Auth popup
-    const authPopup = document.getElementById("authPopup");
-    const menuStep = document.getElementById("menuStep");
-    const loginStep = document.getElementById("loginStep");
-    const registerStep = document.getElementById("registerStep");
-
-    const loginChoiceBtn = document.getElementById("loginChoiceBtn");
-    const registerChoiceBtn = document.getElementById("registerChoiceBtn");
-    const backToMenu1 = document.getElementById("backToMenu1");
-    const backToMenu2 = document.getElementById("backToMenu2");
-
-    const loginEmail = document.getElementById("loginEmail");
-    const loginPassword = document.getElementById("loginPassword");
-    const loginBtn = document.getElementById("loginBtn");
-
-    const registerEmail = document.getElementById("registerEmail");
-    const registerPassword = document.getElementById("registerPassword");
-    const registerConfirm = document.getElementById("registerConfirm");
-    const registerBtn = document.getElementById("registerBtn");
-
-    const logoutBtn = document.getElementById("logoutBtn");
-
-    // SPA sections
-    const homeSection = document.getElementById("homeSection");
-    const walletSection = document.getElementById("walletSection");
-    const profileSection = document.getElementById("profileSection");
-
-    const menuMonedero = document.getElementById("menuMonedero");
-    const menuPerfil = document.getElementById("menuPerfil");
-
-    function showSection(section) {
-      [homeSection, walletSection, profileSection].forEach(s => s.classList.add("hidden"));
-      section.classList.remove("hidden");
-    }
-
-    menuMonedero.addEventListener("click", e => {
-      e.preventDefault();
-      showSection(walletSection);
-      menuMonedero.classList.add("nav-active");
-      menuPerfil.classList.remove("nav-active");
-    });
-
-    menuPerfil.addEventListener("click", e => {
-      e.preventDefault();
-      showSection(profileSection);
-      menuPerfil.classList.add("nav-active");
-      menuMonedero.classList.remove("nav-active");
-    });
-
-    // Mostrar home por defecto
-    showSection(homeSection);
-
-    // Auth listeners
-    auth.onAuthStateChanged((user) => {
-      authPopup.style.display = user ? "none" : "flex";
-      if (user) {
-        checkApuesta(); // al loguear, comprobar si tiene apuesta activa
-      }
-    });
-
-    loginChoiceBtn.onclick = () => {
-      menuStep.classList.add("hidden");
-      loginStep.classList.remove("hidden");
-    };
-    registerChoiceBtn.onclick = () => {
-      menuStep.classList.add("hidden");
-      registerStep.classList.remove("hidden");
-    };
-    backToMenu1.onclick = backToMenu2.onclick = () => {
-      loginStep.classList.add("hidden");
-      registerStep.classList.add("hidden");
-      menuStep.classList.remove("hidden");
-    };
-
-    loginBtn.onclick = async () => {
-      const email = loginEmail.value.trim().toLowerCase();
-      const password = loginPassword.value.trim();
-      if (!email || !password) return alert("Completa ambos campos.");
-      try {
-        await auth.signInWithEmailAndPassword(email, password);
-        authPopup.style.display = "none";
-      } catch (error) { alert("Error: " + error.message); }
-    };
-
-    registerBtn.onclick = async () => {
-      const email = registerEmail.value.trim().toLowerCase();
-      const pass = registerPassword.value.trim();
-      const conf = registerConfirm.value.trim();
-      if (!email || !pass || !conf) return alert("Completa todos los campos.");
-      if (pass !== conf) return alert("Las contraseñas no coinciden.");
-      try {
-        await auth.createUserWithEmailAndPassword(email, pass);
-        authPopup.style.display = "none";
-      } catch (error) { alert("Error: " + error.message); }
-    };
-
-    if (logoutBtn) logoutBtn.onclick = () => auth.signOut();
-  </script>
-
-  <!-- Google Maps para HOME -->
-  <script>
-    function initMap() {
-      const center = { lat: 40.4168, lng: -3.7038 };
-      new google.maps.Map(document.getElementById("map"), {
-        zoom: 13,
-        center: center,
-      });
-    }
-  </script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMKr3Suur4cyDTpJImjC25p5AlLwT1pmA&callback=initMap"></script>
-
-  <!-- ============================= -->
   <!-- POPUP: Apuesta en ti mismo -->
-  <!-- ============================= -->
   <div id="apuestaPopup" class="hidden fixed inset-0 modal-bg flex items-center justify-center z-50">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-8 relative">
       <button id="closeApuestaPopup" class="absolute top-3 right-4 text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
 
-      <!-- Paso 1 -->
       <div id="apuestaStep1">
         <h2 class="text-2xl font-bold mb-4 text-center text-gray-800">Apuesta en ti mismo 💪</h2>
         <p class="text-gray-600 mb-6 text-center">Elige tu situación actual</p>
-
         <div class="flex flex-col gap-4">
-          <button id="btnYaApuntado" class="bg-blue-600 text-white p-4 rounded-lg font-semibold hover:bg-blue-700">
-            🏋️‍♂️ Ya estoy apuntado a un gimnasio
-          </button>
-          <button id="btnNoApuntado" class="bg-green-600 text-white p-4 rounded-lg font-semibold hover:bg-green-700">
-            🏠 No estoy apuntado a ningún gimnasio
-          </button>
+          <button id="btnYaApuntado" class="bg-blue-600 text-white p-4 rounded-lg font-semibold hover:bg-blue-700">🏋️‍♂️ Ya estoy apuntado a un gimnasio</button>
+          <button id="btnNoApuntado" class="bg-green-600 text-white p-4 rounded-lg font-semibold hover:bg-green-700">🏠 No estoy apuntado a ningún gimnasio</button>
         </div>
       </div>
 
-      <!-- Paso 2: Mapa + tarjetas -->
       <div id="apuestaStep2" class="hidden">
         <h2 class="text-xl font-bold mb-3 text-gray-800 text-center" id="mapTitle"></h2>
         <div id="gymMap" class="w-full h-64 rounded-xl border shadow mb-4"></div>
@@ -362,50 +217,47 @@
         </div>
       </div>
 
-      <!-- Paso 3: Datos de apuesta -->
       <div id="apuestaStep3" class="hidden">
         <h2 class="text-2xl font-bold mb-4 text-gray-800 text-center">Configura tu apuesta</h2>
-
         <div class="space-y-4">
           <div>
             <label class="block font-medium text-gray-700 mb-1">Días que se compromete a ir:</label>
             <input type="number" id="diasInput" class="w-full border p-2 rounded" placeholder="Ej: 15" min="1">
           </div>
-
           <p class="text-sm text-gray-500">Contamos con detectores inteligentes en los QR de su gimnasio.</p>
-
           <div>
             <label class="block font-medium text-gray-700 mb-1">Fecha de inicio de la apuesta:</label>
             <input type="text" id="fechaInicio" class="w-full border p-2 rounded bg-gray-100" readonly>
           </div>
-
           <div>
             <label class="block font-medium text-gray-700 mb-1">Apuesta (€):</label>
             <input type="number" id="apuestaInput" class="w-full border p-2 rounded" min="10" placeholder="Mínimo 10€">
           </div>
-
           <p class="text-sm text-gray-500">
             Si gana aumentará su apuesta un 30% en el primer mes.<br>
             Solo pierde la apuesta si no va al gimnasio <span id="gymNameInfo" class="font-semibold text-blue-600"></span> más de los días indicados.
           </p>
-
-          <button id="confirmApuestaBtn" class="w-full bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 mt-4">
-            Continuar
-          </button>
+          <button id="confirmApuestaBtn" class="w-full bg-blue-600 text-white p-3 rounded font-semibold hover:bg-blue-700 mt-4">Continuar</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Carga Stripe.js -->
+  <!-- GOOGLE MAPS -->
+  <script>
+    function initMap() {
+      const center = { lat: 40.4168, lng: -3.7038 };
+      new google.maps.Map(document.getElementById("map"), { zoom: 13, center });
+    }
+  </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMKr3Suur4cyDTpJImjC25p5AlLwT1pmA&callback=initMap"></script>
+
   <!-- STRIPE -->
   <script src="https://js.stripe.com/v3"></script>
 
-  <!-- LÓGICA DE APUESTA + FIRESTORE + STRIPE -->
+  <!-- LÓGICA DE APP -->
   <script>
     const apuestaContainer = document.getElementById("apuestaContainer");
-
-    // Popup apuesta
     const apuestaPopupEl = document.getElementById("apuestaPopup");
     const closeApuestaPopup = document.getElementById("closeApuestaPopup");
 
@@ -430,19 +282,20 @@
     const confirmApuestaBtn = document.getElementById("confirmApuestaBtn");
 
     let selectedGym = null;
-    let gymMapInstance = null;
 
     function openApuestaPopup() {
       apuestaPopupEl.classList.remove("hidden");
       step1.classList.remove("hidden");
       step2.classList.add("hidden");
       step3.classList.add("hidden");
-      selectedGym = null;
       selectedGymBox.classList.add("hidden");
       gymCardsDiv.innerHTML = "";
     }
 
     closeApuestaPopup.onclick = () => apuestaPopupEl.classList.add("hidden");
+
+    btnYaApuntado.onclick = () => showGymSelection("Seleccione a qué gimnasio está apuntado");
+    btnNoApuntado.onclick = () => showGymSelection("¿A qué gimnasio le gustaría ir?");
 
     function showGymSelection(title) {
       step1.classList.add("hidden");
@@ -451,46 +304,29 @@
       loadGymMap();
     }
 
-    btnYaApuntado.onclick = () => showGymSelection("Seleccione a qué gimnasio está apuntado");
-    btnNoApuntado.onclick = () => showGymSelection("¿A qué gimnasio le gustaría ir?");
-
     function loadGymMap() {
       const gyms = [
         { name: "VivaGym Madrid", lat: 40.4185, lng: -3.70256 },
         { name: "Basic-Fit Salamanca", lat: 40.4303, lng: -3.6830 },
         { name: "McFIT Gran Vía", lat: 40.4208, lng: -3.7074 },
       ];
-
-      gymMapInstance = new google.maps.Map(gymMapDiv, {
-        center: { lat: 40.4168, lng: -3.7038 },
-        zoom: 13,
-      });
-
+      const map = new google.maps.Map(gymMapDiv, { center: { lat: 40.4168, lng: -3.7038 }, zoom: 13 });
       gyms.forEach(gym => {
-        const marker = new google.maps.Marker({
-          position: { lat: gym.lat, lng: gym.lng },
-          map: gymMapInstance,
-          title: gym.name,
-        });
-        marker.addListener("click", () => {
-          renderGymCards(gyms, gym.name);
-        });
+        const marker = new google.maps.Marker({ position: { lat: gym.lat, lng: gym.lng }, map, title: gym.name });
+        marker.addListener("click", () => renderGymCards(gyms, gym.name));
       });
     }
 
     function renderGymCards(gyms, selectedName) {
-      gymCardsDiv.innerHTML = gyms.map(g =>
-        `<button class="border p-3 rounded-lg w-full text-left hover:bg-blue-50 ${g.name === selectedName ? 'border-blue-500' : ''}" onclick="selectGym('${g.name.replace(/'/g, "\\'")}')">
-          ${g.name}
-        </button>`
+      gymCardsDiv.innerHTML = gyms.map(g => 
+        `<button class="border p-3 rounded-lg w-full text-left hover:bg-blue-50 ${g.name === selectedName ? 'border-blue-500' : ''}" onclick="selectGym('${g.name}')">${g.name}</button>`
       ).join("");
     }
 
-    // Hacemos selectGym global
     window.selectGym = function(name) {
       selectedGym = name;
       selectedGymBox.classList.remove("hidden");
-      selectedGymText.textContent = \`Gimnasio seleccionado: \${name}\`;
+      selectedGymText.textContent = `Gimnasio seleccionado: ${name}`;
     };
 
     continueGymBtn.onclick = () => {
@@ -501,9 +337,6 @@
       fechaInicioInput.value = new Date().toLocaleDateString("es-ES");
     };
 
-    // ========================
-    // STRIPE: Redirigir a Checkout
-    // ========================
     confirmApuestaBtn.onclick = async () => {
       const dias = parseInt(diasInput.value);
       const apuesta = parseFloat(apuestaInput.value);
@@ -513,30 +346,19 @@
       const user = auth.currentUser;
       if (!user) return alert("Debe iniciar sesión.");
 
-      try {
-        const payload = {
-          userId: user.uid,
-          gimnasio: selectedGym,
-          diasComprometidos: dias,
-          apuesta: apuesta
-        };
+      // 🔥 Guarda la apuesta en Firestore
+      await db.collection("apuestas").add({
+        userId: user.uid,
+        gimnasio: selectedGym,
+        diasComprometidos: dias,
+        apuesta: apuesta,
+        activa: true,
+        fechaInicio: new Date().toISOString()
+      });
 
-        const resp = await fetch("/api/create-checkout-session", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        const data = await resp.json();
-        if (data.error) throw new Error(data.error);
-
-        // Reemplaza con tu clave pública de Stripe
-        const stripe = Stripe("pk_test_xxx_tu_public_key");
-        const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
-        if (error) throw error;
-
-      } catch (err) {
-        alert("Error al iniciar pago: " + err.message);
-      }
+      alert("✅ Apuesta registrada correctamente en Firestore.");
+      apuestaPopupEl.classList.add("hidden");
+      checkApuesta();
     };
 
     async function checkApuesta() {
@@ -557,24 +379,25 @@
           document.getElementById("btnApuesta").onclick = openApuestaPopup;
         } else {
           const data = snapshot.docs[0].data();
-          renderApuestaEnCurso(data.diasComprometidos);
+          apuestaContainer.innerHTML = `
+            <div>
+              <p class="text-sm text-gray-500">Apuesta en curso</p>
+              <h3 class="text-2xl font-bold text-blue-600">0 / ${data.diasComprometidos} días</h3>
+            </div>`;
         }
-      } catch (e) {
-        console.error(e);
+      } catch (err) {
+        console.error("Error consultando apuestas:", err);
       }
     }
 
-    function renderApuestaEnCurso(dias) {
-      apuestaContainer.innerHTML = `
-        <div>
-          <p class="text-sm text-gray-500">Apuesta en curso</p>
-          <h3 class="text-2xl font-bold text-blue-600">0 / ${dias} días</h3>
-        </div>`;
-    }
-
-    if (auth.currentUser) checkApuesta();
+    // 🔥 Detecta login y muestra/oculta popup correctamente
+    auth.onAuthStateChanged((user) => {
+      authPopup.style.display = user ? "none" : "flex";
+      if (user) checkApuesta();
+    });
   </script>
 </body>
 </html>
+
 
 
