@@ -397,11 +397,15 @@
     </div>
   </div>
 
-  <!-- LÓGICA DE APUESTA + FIRESTORE -->
+  <!-- Carga Stripe.js -->
+  <!-- STRIPE -->
+  <script src="https://js.stripe.com/v3"></script>
+
+  <!-- LÓGICA DE APUESTA + FIRESTORE + STRIPE -->
   <script>
     const apuestaContainer = document.getElementById("apuestaContainer");
 
-    // Popup apuesta (nombres distintos para no chocar con auth popup)
+    // Popup apuesta
     const apuestaPopupEl = document.getElementById("apuestaPopup");
     const closeApuestaPopup = document.getElementById("closeApuestaPopup");
 
@@ -482,11 +486,11 @@
       ).join("");
     }
 
-    // Hacemos selectGym global para el onclick inline
+    // Hacemos selectGym global
     window.selectGym = function(name) {
       selectedGym = name;
       selectedGymBox.classList.remove("hidden");
-      selectedGymText.textContent = `Gimnasio seleccionado: ${name}`;
+      selectedGymText.textContent = \`Gimnasio seleccionado: \${name}\`;
     };
 
     continueGymBtn.onclick = () => {
@@ -497,6 +501,9 @@
       fechaInicioInput.value = new Date().toLocaleDateString("es-ES");
     };
 
+    // ========================
+    // STRIPE: Redirigir a Checkout
+    // ========================
     confirmApuestaBtn.onclick = async () => {
       const dias = parseInt(diasInput.value);
       const apuesta = parseFloat(apuestaInput.value);
@@ -507,18 +514,28 @@
       if (!user) return alert("Debe iniciar sesión.");
 
       try {
-        await db.collection("apuestas").add({
+        const payload = {
           userId: user.uid,
           gimnasio: selectedGym,
           diasComprometidos: dias,
-          apuesta: apuesta,
-          fechaInicio: new Date().toISOString(),
-          activa: true
+          apuesta: apuesta
+        };
+
+        const resp = await fetch("/api/create-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
         });
-        apuestaPopupEl.classList.add("hidden");
-        renderApuestaEnCurso(dias);
+        const data = await resp.json();
+        if (data.error) throw new Error(data.error);
+
+        // Reemplaza con tu clave pública de Stripe
+        const stripe = Stripe("pk_test_xxx_tu_public_key");
+        const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
+        if (error) throw error;
+
       } catch (err) {
-        alert("Error al guardar apuesta: " + err.message);
+        alert("Error al iniciar pago: " + err.message);
       }
     };
 
@@ -555,10 +572,8 @@
         </div>`;
     }
 
-    // Si ya está logueado al cargar
     if (auth.currentUser) checkApuesta();
   </script>
-
 </body>
 </html>
 
